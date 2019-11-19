@@ -297,8 +297,8 @@ render(tripInfoElement, createTripInfoTemplate(), `afterbegin`);
 
 const tripEventsElement = document.querySelector(`.trip-events`);
 
-render(tripEventsElement, createFormEditTemplate(), `beforeend`);
-render(tripEventsElement, createTripDaysTemplate(), `beforeend`);
+render(tripEventsElement, createFormEditTemplate());
+render(tripEventsElement, createTripDaysTemplate());
 
 const tripDaysItemElement = tripEventsElement.querySelector(`.trip-days__item`);
 
