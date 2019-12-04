@@ -1,9 +1,9 @@
 import {createSiteMenuTemplate} from "./components/site-menu";
 import {createFilterTemplate} from "./components/filter";
 import {createTripDaysTemplate} from "./components/trip-days";
-import {createEventsListTemplate} from "./components/evets-list";
-import {createEventsItemTemplate} from "./components/events-item";
-import {createFormEditTemplate} from "./components/form-edit";
+import {createEventsListTemplate} from "./components/events-list";
+import {createEventsItemTemplate} from "./components/event";
+import {createFormEditTemplate} from "./components/event-edit";
 import {createTripInfoTemplate} from "./components/trip-info";
 
 const EVENT_COUNT = 3;
