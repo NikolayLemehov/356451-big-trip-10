@@ -5,8 +5,16 @@ import {createEventsListTemplate} from "./components/events-list";
 import {createEventsItemTemplate} from "./components/event";
 import {createFormEditTemplate} from "./components/event-edit";
 import {createTripInfoTemplate} from "./components/trip-info";
+import {generateEvents} from "./mock/event";
 
-const EVENT_COUNT = 3;
+const EVENT_COUNT = 6;
+const events = generateEvents(EVENT_COUNT);
+// console.log(events);
+// events.forEach((it) => {
+//   console.log(it.type);
+//   console.log(it.offers);
+// });
+// events.forEach((it) => console.log(it.offers));
 
 const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
