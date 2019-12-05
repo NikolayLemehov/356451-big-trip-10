@@ -42,7 +42,4 @@ render(tripDaysItemElement, createEventsListTemplate());
 
 const eventListElement = tripDaysItemElement.querySelector(`.trip-events__list`);
 
-new Array(EVENT_COUNT)
-  .fill(``)
-  .forEach(() => render(eventListElement, createEventsItemTemplate()));
-
+events.forEach((event) => render(eventListElement, createEventsItemTemplate(event)));

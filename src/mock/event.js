@@ -26,8 +26,8 @@ const TimePeriodInMinute = {
   MAX: 60 * 12,
 };
 const Price = {
-  MIN: 1000,
-  MAX: 100000,
+  MIN: 5,
+  MAX: 200,
 };
 const OfferCount = {
   MIN: 0,
@@ -96,9 +96,9 @@ const getOffer = (names) => {
   return names.map((it) => additionalOptions[it]);
 };
 const typeToOffer = new Map();
-types.forEach((it) => {
+types.forEach((type) => {
   const count = getRandomIntegerNumber(OfferCount.MIN, OfferCount.MAX);
-  typeToOffer.set(it, getOffer(shuffle(offerNames.slice()).slice(count === 0 ? offerNames.length : -1 * count)));
+  typeToOffer.set(type, getOffer(shuffle(offerNames.slice()).slice(count === 0 ? offerNames.length : -1 * count)));
 });
 
 const generateEvent = (date) => {
