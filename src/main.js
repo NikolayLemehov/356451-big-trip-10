@@ -12,7 +12,7 @@ const EVENT_COUNT = 6;
 const events = generateEvents(EVENT_COUNT);
 // console.log(events);
 // events.forEach((it) => {
-//   console.log(it.type);
+//   console.log(it.city);
 //   console.log(it.offers);
 // });
 // events.forEach((it) => console.log(it.offers));
@@ -30,7 +30,7 @@ render(titleFilterElement, createFilterTemplate(filterNames), `afterend`);
 
 const tripInfoElement = tripMainElement.querySelector(`.trip-info`);
 
-render(tripInfoElement, createTripInfoTemplate(), `afterbegin`);
+render(tripInfoElement, createTripInfoTemplate(events), `afterbegin`);
 
 const tripEventsElement = document.querySelector(`.trip-events`);
 
