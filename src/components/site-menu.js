@@ -1,8 +1,17 @@
-export const createSiteMenuTemplate = () => {
+const createMenuElement = (name, isChecked) => {
+  return (
+    `<a class="trip-tabs__btn ${isChecked ? `trip-tabs__btn--active` : ``}" href="#">${name}</a>`
+  );
+};
+
+const createSiteMenuTemplate = (names) => {
+  const menuMarkUp = names.map((name, i) => createMenuElement(name, i === 0)).join(``);
+
   return (
     `<nav class="trip-controls__trip-tabs  trip-tabs">
-      <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Table</a>
-      <a class="trip-tabs__btn" href="#">Stats</a>
+      ${menuMarkUp}
     </nav>`
   );
 };
+
+export {createSiteMenuTemplate};

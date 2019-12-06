@@ -9,6 +9,14 @@ const formatTime = (date) => {
   return `${hours}:${minutes}`;
 };
 
+const formatDate = (date) => {
+  const years = castTimeFormat(date.getFullYear()).slice(-2);
+  const months = castTimeFormat(date.getMonth() + 1);
+  const days = castTimeFormat(date.getDate());
+
+  return `${days}/${months}/${years}`;
+};
+
 const getDuration = (start, end) => {
   const interval = new Date(end - start);
   const days = interval.getDate() - 1;
@@ -20,4 +28,4 @@ const getDuration = (start, end) => {
   ${minutes === 0 ? `` : castTimeFormat(minutes) + `M`}`;
 };
 
-export {formatTime, getDuration};
+export {formatTime, formatDate, getDuration};

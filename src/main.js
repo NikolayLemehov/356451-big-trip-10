@@ -6,6 +6,7 @@ import {createEventsItemTemplate} from "./components/event";
 import {createFormEditTemplate} from "./components/event-edit";
 import {createTripInfoTemplate} from "./components/trip-info";
 import {generateEvents} from "./mock/event";
+import {filterNames, menuNames} from "./const";
 
 const EVENT_COUNT = 6;
 const events = generateEvents(EVENT_COUNT);
@@ -24,8 +25,8 @@ const tripMainElement = document.querySelector(`.trip-main`);
 const titleMenuElement = tripMainElement.querySelector(`.trip-controls h2:nth-of-type(1)`);
 const titleFilterElement = tripMainElement.querySelector(`.trip-controls h2:nth-of-type(2)`);
 
-render(titleMenuElement, createSiteMenuTemplate(), `afterend`);
-render(titleFilterElement, createFilterTemplate(), `afterend`);
+render(titleMenuElement, createSiteMenuTemplate(menuNames), `afterend`);
+render(titleFilterElement, createFilterTemplate(filterNames), `afterend`);
 
 const tripInfoElement = tripMainElement.querySelector(`.trip-info`);
 
@@ -33,7 +34,7 @@ render(tripInfoElement, createTripInfoTemplate(), `afterbegin`);
 
 const tripEventsElement = document.querySelector(`.trip-events`);
 
-render(tripEventsElement, createFormEditTemplate());
+render(tripEventsElement, createFormEditTemplate(events[0]));
 render(tripEventsElement, createTripDaysTemplate());
 
 const tripDaysItemElement = tripEventsElement.querySelector(`.trip-days__item`);

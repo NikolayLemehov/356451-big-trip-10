@@ -33,7 +33,7 @@ const OfferCount = {
   MIN: 0,
   MAX: 2,
 };
-const additionalOptions = {
+const offersStructure = {
   luggage: {
     name: `luggage`,
     title: `Add luggage`,
@@ -60,12 +60,16 @@ const additionalOptions = {
     price: 40,
   },
 };
-const offerNames = [];
-for (let key in additionalOptions) {
-  if (key !== undefined) {
-    offerNames.push(additionalOptions[key].name);
+const getOfferNames = () => {
+  const names = [];
+  for (let key in offersStructure) {
+    if (key !== undefined) {
+      names.push(offersStructure[key].name);
+    }
   }
-}
+  return names;
+};
+const offerNames = getOfferNames();
 
 const shuffle = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
@@ -93,7 +97,7 @@ const getDate = (date) => {
 };
 
 const getOffer = (names) => {
-  return names.map((it) => additionalOptions[it]);
+  return names.map((it) => offersStructure[it]);
 };
 const typeToOffer = new Map();
 types.forEach((type) => {
@@ -107,7 +111,7 @@ const generateEvent = (date) => {
     type,
     city: getRandomArrayItem(cities),
     photos: generatePhotos(),
-    phrases: shuffle(phrases.slice()).slice(-1 * getRandomIntegerNumber(PhraseCount.MIN, PhraseCount.MAX)),
+    destination: shuffle(phrases.slice()).slice(-1 * getRandomIntegerNumber(PhraseCount.MIN, PhraseCount.MAX)).join(` `),
     date: getDate(date),
     price: getRandomIntegerNumber(Price.MIN, Price.MAX),
     offers: typeToOffer.get(type),
@@ -121,4 +125,4 @@ const generateEvents = (count) => {
     .map(() => generateEvent(currentDate));
 };
 
-export {generateEvents};
+export {generateEvents, offersStructure, offerNames};
