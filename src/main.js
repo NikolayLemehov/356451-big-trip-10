@@ -13,7 +13,7 @@ const events = generateEvents(EVENT_COUNT);
 // console.log(events);
 // events.forEach((it) => {
 //   console.log(it.city);
-//   console.log(it.offers);
+//   console.log(it.date);
 // });
 // events.forEach((it) => console.log(it.offers));
 
