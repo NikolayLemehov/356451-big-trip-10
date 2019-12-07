@@ -1,7 +1,7 @@
 import {formatTime, formatDate} from "../utils";
 import {offersStructure, offerNames} from "../mock/event";
 
-const createOfferElement = (offer, isChecked) => {
+const createOfferTemplate = (offer, isChecked) => {
   const {name, title, price} = offer;
   return (
     `<div class="event__offer-selector">
@@ -20,7 +20,7 @@ const createOfferElement = (offer, isChecked) => {
   );
 };
 
-const createPhotoElement = (photoUrl) => `<img class="event__photo" src="${photoUrl}" alt="Event photo">`;
+const createPhotoTemplate = (photoUrl) => `<img class="event__photo" src="${photoUrl}" alt="Event photo">`;
 
 const createFormEditTemplate = (event) => {
   const {type, city, photos, destination, date, price, offers} = event;
@@ -29,9 +29,9 @@ const createFormEditTemplate = (event) => {
   const endDate = `${formatDate(date.end)} ${formatTime(date.end)}`;
 
   const getIsChecked = (name) => offers.find((offer) => offer.name === name);
-  const offersMarkUp = offerNames.map((it) => createOfferElement(offersStructure[it], getIsChecked(it))).join(``);
+  const offersMarkUp = offerNames.map((it) => createOfferTemplate(offersStructure[it], getIsChecked(it))).join(``);
 
-  const photoElements = photos.map((url) => createPhotoElement(url)).join(``);
+  const photoElements = photos.map((url) => createPhotoTemplate(url)).join(``);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
