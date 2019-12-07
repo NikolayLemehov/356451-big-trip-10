@@ -30,7 +30,7 @@ render(titleFilterElement, createFiltersTemplate(filterToChecked), `afterend`);
 
 const tripInfoElement = tripMainElement.querySelector(`.trip-info`);
 
-render(tripInfoElement, createTripInfoTemplate(events), `afterbegin`);
+render(tripInfoElement, createTripInfoTemplate(events));
 
 const tripEventsElement = document.querySelector(`.trip-events`);
 

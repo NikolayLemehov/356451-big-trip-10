@@ -32,13 +32,17 @@ const createTripInfoTemplate = (events) => {
   const endCity = cities[cities.length - 1];
   const middleCity = cities.length > 3 ? `...` : cities[1];
   const date = getPeriod(events);
+  const totalCost = events.reduce((total, event) => total + event.price, 0);
 
   return (
     `<div class="trip-info__main">
       <h1 class="trip-info__title">${startCity} &mdash; ${middleCity} &mdash; ${endCity}</h1>
 
       <p class="trip-info__dates">${date.start}&nbsp;&mdash;&nbsp;${date.end}</p>
-    </div>`
+    </div>
+    <p class="trip-info__cost">
+      Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalCost}</span>
+    </p>`
   );
 };
 
