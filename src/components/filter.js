@@ -1,4 +1,4 @@
-const createFilterElement = (name, isChecked) => {
+const createFilterTemplate = (name, isChecked) => {
   return (
     `<div class="trip-filters__filter">
       <input 
@@ -13,9 +13,16 @@ const createFilterElement = (name, isChecked) => {
     </div>`
   );
 };
+const createFilterMarkUp = (filterToChecked) => {
+  const array = [];
+  for (const key of filterToChecked.keys()) {
+    array.push(createFilterTemplate(key, filterToChecked.get(key)));
+  }
+  return array.join(``);
+};
 
-const createFilterTemplate = (names) => {
-  const filterMarkUp = names.map((name, i) => createFilterElement(name, i === 0)).join(``);
+const createFiltersTemplate = (filterToChecked) => {
+  const filterMarkUp = createFilterMarkUp(filterToChecked);
 
   return (
     `<form class="trip-filters" action="#" method="get">
@@ -25,4 +32,4 @@ const createFilterTemplate = (names) => {
   );
 };
 
-export {createFilterTemplate};
+export {createFiltersTemplate};

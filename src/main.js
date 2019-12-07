@@ -1,12 +1,12 @@
 import {createSiteMenuTemplate} from "./components/site-menu";
-import {createFilterTemplate} from "./components/filter";
+import {createFiltersTemplate} from "./components/filter";
 import {createTripDaysTemplate} from "./components/trip-days";
 import {createEventsListTemplate} from "./components/events-list";
 import {createEventsItemTemplate} from "./components/event";
 import {createFormEditTemplate} from "./components/event-edit";
 import {createTripInfoTemplate} from "./components/trip-info";
 import {generateEvents} from "./mock/event";
-import {filterNames, menuNames} from "./const";
+import {menuNames, filterToChecked} from "./const";
 
 const EVENT_COUNT = 6;
 const events = generateEvents(EVENT_COUNT);
@@ -26,7 +26,7 @@ const titleMenuElement = tripMainElement.querySelector(`.trip-controls h2:nth-of
 const titleFilterElement = tripMainElement.querySelector(`.trip-controls h2:nth-of-type(2)`);
 
 render(titleMenuElement, createSiteMenuTemplate(menuNames), `afterend`);
-render(titleFilterElement, createFilterTemplate(filterNames), `afterend`);
+render(titleFilterElement, createFiltersTemplate(filterToChecked), `afterend`);
 
 const tripInfoElement = tripMainElement.querySelector(`.trip-info`);
 
