@@ -1,6 +1,6 @@
 import {formatTime, getDuration} from "../utils";
 
-const createOfferElements = (offers) => offers
+const createOffersTemplate = (offers) => offers
   .map((offer) => {
     return (
       `<li class="event__offer">
@@ -40,7 +40,7 @@ const createEventsItemTemplate = (event) => {
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
 
-        ${createOfferElements(offers)}
+        ${createOffersTemplate(offers)}
 
         </ul>
 
