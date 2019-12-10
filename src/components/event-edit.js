@@ -1,15 +1,15 @@
-import {formatTime, formatDate} from "../utils";
-import {offersStructure, offerNames} from "../mock/event";
+import {formatDate, formatTime} from "../utils";
+import {offerNames, offersStructure} from "../mock/event";
 
 const createOfferTemplate = (offer, isChecked) => {
   const {name, title, price} = offer;
   return (
     `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden"
-      id="event-offer-${name}-1"
-      type="checkbox"
-      name="event-offer-${name}"
-      ${isChecked ? `checked` : ``}
+        id="event-offer-${name}-1"
+        type="checkbox"
+        name="event-offer-${name}"
+        ${isChecked ? `checked` : ``}
       >
       <label class="event__offer-label" for="event-offer-${name}-1">
         <span class="event__offer-title">${title}</span>
