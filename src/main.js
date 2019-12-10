@@ -3,7 +3,7 @@ import {createFiltersTemplate} from "./components/filter";
 import {createTripDaysTemplate} from "./components/trip-days";
 import {createEventsListTemplate} from "./components/events-list";
 import {createEventsItemTemplate} from "./components/event";
-import {createFormEditTemplate} from "./components/event-edit";
+import {createEditEventTemplate} from "./components/event-edit";
 import {createTripInfoTemplate} from "./components/trip-info";
 import {generateEvents} from "./mock/event";
 import {menuNames, filterToChecked} from "./const";
@@ -34,7 +34,7 @@ render(tripInfoElement, createTripInfoTemplate(events));
 
 const tripEventsElement = document.querySelector(`.trip-events`);
 
-render(tripEventsElement, createFormEditTemplate(events[0]));
+render(tripEventsElement, createEditEventTemplate(events[0]));
 render(tripEventsElement, createTripDaysTemplate());
 
 const tripDaysItemElement = tripEventsElement.querySelector(`.trip-days__item`);

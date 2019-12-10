@@ -22,7 +22,7 @@ const createOfferTemplate = (offer, isChecked) => {
 
 const createPhotoTemplate = (photoUrl) => `<img class="event__photo" src="${photoUrl}" alt="Event photo">`;
 
-const createFormEditTemplate = (event) => {
+const createEditEventTemplate = (event) => {
   const {type, city, photos, destination, date, price, offers} = event;
 
   const startDate = `${formatDate(date.start)} ${formatTime(date.start)}`;
@@ -166,4 +166,4 @@ const createFormEditTemplate = (event) => {
   );
 };
 
-export {createFormEditTemplate};
+export {createEditEventTemplate};
