@@ -13,16 +13,9 @@ const createFilterTemplate = (name, isChecked) => {
     </div>`
   );
 };
-const createFilterMarkUp = (filterToChecked) => {
-  const array = [];
-  for (const key of filterToChecked.keys()) {
-    array.push(createFilterTemplate(key, filterToChecked.get(key)));
-  }
-  return array.join(``);
-};
 
 const createFiltersTemplate = (filterToChecked) => {
-  const filterMarkUp = createFilterMarkUp(filterToChecked);
+  const filterMarkUp = [...filterToChecked.keys()].map((key) => createFilterTemplate(key, filterToChecked.get(key))).join(``);
 
   return (
     `<form class="trip-filters" action="#" method="get">
