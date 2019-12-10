@@ -1,4 +1,4 @@
-import {months} from "../const";
+import {MONTHS} from "../const";
 
 const getCities = (events) => {
   const cities = events.map((event) => event.city);
@@ -15,13 +15,13 @@ const getPeriod = (events) => {
 
   if (startDate.getMonth() === endDate.getMonth()) {
     return {
-      start: `${months[startDate.getMonth()]} ${startDate.getDate()}`,
+      start: `${MONTHS[startDate.getMonth()]} ${startDate.getDate()}`,
       end: `${endDate.getDate()}`,
     };
   } else {
     return {
-      start: `${startDate.getDate()} ${months[startDate.getMonth()]}`,
-      end: `${endDate.getDate()} ${months[endDate.getMonth()]}`,
+      start: `${startDate.getDate()} ${MONTHS[startDate.getMonth()]}`,
+      end: `${endDate.getDate()} ${MONTHS[endDate.getMonth()]}`,
     };
   }
 };
