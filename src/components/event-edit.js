@@ -1,5 +1,5 @@
 import {formatDate, formatTime} from "../utils";
-import {offerNames, offersStructure} from "../mock/event";
+import {offerNames, offersStructure} from "../mock/events";
 
 const createOfferTemplate = (offer, isChecked) => {
   const {name, title, price} = offer;

@@ -12,7 +12,7 @@ const createOffersTemplate = (offers) => offers
   })
   .join(``);
 
-const createEventTemplate = (event) => {
+const createEventsTemplate = (event) => {
   const {type, date, price, offers} = event;
   const duration = getDuration(date.start, date.end);
 
@@ -52,4 +52,4 @@ const createEventTemplate = (event) => {
   );
 };
 
-export {createEventTemplate};
+export {createEventsTemplate};
