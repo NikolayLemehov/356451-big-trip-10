@@ -2,7 +2,7 @@ import {createSiteMenuTemplate} from "./components/site-menu";
 import {createFiltersTemplate} from "./components/filter";
 import {createTripDaysTemplate} from "./components/trip-days";
 import {createEventsListTemplate} from "./components/events-list";
-import {createEventsItemTemplate} from "./components/event";
+import {createEventTemplate} from "./components/event";
 import {createEditEventTemplate} from "./components/event-edit";
 import {createTripInfoTemplate} from "./components/trip-info";
 import {generateEvents} from "./mock/event";
@@ -37,4 +37,4 @@ render(tripDaysItemElement, createEventsListTemplate());
 
 const eventListElement = tripDaysItemElement.querySelector(`.trip-events__list`);
 
-events.forEach((event) => render(eventListElement, createEventsItemTemplate(event)));
+events.forEach((event) => render(eventListElement, createEventTemplate(event)));
