@@ -6,16 +6,10 @@ import {createEventsItemTemplate} from "./components/event";
 import {createEditEventTemplate} from "./components/event-edit";
 import {createTripInfoTemplate} from "./components/trip-info";
 import {generateEvents} from "./mock/event";
-import {menuNames, filterToChecked} from "./const";
+import {filterToChecked, menuNames} from "./const";
 
 const EVENT_COUNT = 6;
 const events = generateEvents(EVENT_COUNT);
-// console.log(events);
-// events.forEach((it) => {
-//   console.log(it.city);
-//   console.log(it.date);
-// });
-// events.forEach((it) => console.log(it.offers));
 
 const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
