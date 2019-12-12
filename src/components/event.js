@@ -39,9 +39,7 @@ const createEventTemplate = (event) => {
 
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-
-        ${createOffersTemplate(offers)}
-
+          ${createOffersTemplate(offers)}
         </ul>
 
         <button class="event__rollup-btn" type="button">
