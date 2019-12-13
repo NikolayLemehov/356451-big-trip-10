@@ -1,3 +1,5 @@
+import {createElement} from "../utils";
+
 const createFilterTemplate = (name, isChecked) => {
   return (
     `<div class="trip-filters__filter">
@@ -25,4 +27,25 @@ const createFiltersTemplate = (filterToChecked) => {
   );
 };
 
-export {createFiltersTemplate};
+export default class SiteMenu {
+  constructor(filterToChecked) {
+    this._filterToChecked = filterToChecked;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFiltersTemplate(this._filterToChecked);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
