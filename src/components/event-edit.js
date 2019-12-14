@@ -166,7 +166,7 @@ const createEditEventTemplate = (event) => {
   );
 };
 
-export default class EditEvent {
+export default class EventEdit {
   constructor(event) {
     this._event = event;
     this._element = null;
