@@ -1,6 +1,6 @@
 import {createElement} from "../utils";
 
-export default class EventsList {
+export default class EventsListComponent {
   constructor() {
     this._element = null;
   }

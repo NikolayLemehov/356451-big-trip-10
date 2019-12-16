@@ -10,7 +10,7 @@ const createTripInfoTemplate = (events) => {
   );
 };
 
-export default class TripInfoCost {
+export default class TripInfoCostComponent {
   constructor(events) {
     this._events = events;
     this._element = null;

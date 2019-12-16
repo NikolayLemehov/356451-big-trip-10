@@ -27,7 +27,7 @@ const createFiltersTemplate = (filterToChecked) => {
   );
 };
 
-export default class FilterList {
+export default class FilterListComponent {
   constructor(filterToChecked) {
     this._filterToChecked = filterToChecked;
     this._element = null;

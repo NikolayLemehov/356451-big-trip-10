@@ -1,17 +1,13 @@
 import {createElement} from "../utils";
 
-export default class TripDayList {
+export default class EmptyComponent {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
     return (
-      `<ul class="trip-days">
-        <li class="trip-days__item  day">
-          <div class="day__info"></div>
-        </li>
-      </ul>`
+      `<p class="trip-events__msg">Click New Event to create your first point</p>`
     );
   }
 

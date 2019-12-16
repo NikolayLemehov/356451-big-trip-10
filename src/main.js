@@ -1,12 +1,12 @@
-import SiteMenuComponent from "./components/site-menu";
-import FilterListComponent from "./components/filter";
-import TripDayListComponent from "./components/trip-day-list";
-import EventsListComponent from "./components/events-list";
-import EventComponent from "./components/event";
-import EventEditComponent from "./components/event-edit";
-import TripInfoMainComponent from "./components/trip-info-main";
-import TripInfoCostComponent from "./components/trip-info-cost";
-import NoPointsComponent from "./components/no-points";
+import SiteMenuComponent from "./components/site-menu-component";
+import FilterListComponent from "./components/filter-list-component";
+import TripDayListComponent from "./components/trip-day-list-component";
+import EventsListComponent from "./components/events-list-component";
+import EventComponent from "./components/event-component";
+import EventEditComponent from "./components/event-edit-component";
+import TripInfoMainComponent from "./components/trip-info-main-component";
+import TripInfoCostComponent from "./components/trip-info-cost-component";
+import EmptyComponent from "./components/empty-component";
 import {generateEvents} from "./mock/events";
 import {filterToChecked, menuNames} from "./const";
 import {render, RenderPosition} from "./utils";
@@ -66,7 +66,7 @@ const eventListComponent = new EventsListComponent();
 render(tripDaysItemElement, eventListComponent.getElement());
 
 if (events.length === 0) {
-  render(tripEventsElement, new NoPointsComponent().getElement());
+  render(tripEventsElement, new EmptyComponent().getElement());
 } else {
   render(tripInfoElement, new TripInfoMainComponent(events).getElement(), RenderPosition.AFTERBEGIN);
 
