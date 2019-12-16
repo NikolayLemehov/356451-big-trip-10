@@ -1,3 +1,5 @@
+import {createElement} from "../utils";
+
 const CHECKED_MENU_NUMBER = 1;
 
 const createMenuTemplate = (name, isChecked) => {
@@ -16,4 +18,25 @@ const createSiteMenuTemplate = (names) => {
   );
 };
 
-export {createSiteMenuTemplate};
+export default class SiteMenuComponent {
+  constructor(names) {
+    this._names = names;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSiteMenuTemplate(this._names);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

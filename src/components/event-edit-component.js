@@ -1,4 +1,4 @@
-import {formatDate, formatTime} from "../utils";
+import {createElement, formatDate, formatTime} from "../utils";
 import {offerNames, offersStructure} from "../mock/events";
 
 const createOfferTemplate = (offer, isChecked) => {
@@ -166,4 +166,25 @@ const createEditEventTemplate = (event) => {
   );
 };
 
-export {createEditEventTemplate};
+export default class EventEditComponent {
+  constructor(event) {
+    this._event = event;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEditEventTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
