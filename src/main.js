@@ -1,6 +1,6 @@
 import SiteMenuComponent from "./components/site-menu";
 import FilterListComponent from "./components/filter";
-import TripDaysComponent from "./components/trip-days";
+import TripDayListComponent from "./components/trip-day-list";
 import EventsListComponent from "./components/events-list";
 import EventComponent from "./components/event";
 import EventEditComponent from "./components/event-edit";
@@ -59,7 +59,7 @@ render(titleFilterElement, new FilterListComponent(filterToChecked).getElement()
 
 const tripEventsElement = document.querySelector(`.trip-events`);
 
-render(tripEventsElement, new TripDaysComponent().getElement());
+render(tripEventsElement, new TripDayListComponent().getElement());
 const tripDaysItemElement = tripEventsElement.querySelector(`.trip-days__item`);
 
 const eventListComponent = new EventsListComponent();

@@ -1,6 +1,6 @@
 import {createElement} from "../utils";
 
-export default class TripDays {
+export default class TripDayList {
   constructor() {
     this._element = null;
   }
