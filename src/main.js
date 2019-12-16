@@ -1,5 +1,5 @@
 import SiteMenuComponent from "./components/site-menu";
-import FiltersComponent from "./components/filter";
+import FilterListComponent from "./components/filter";
 import TripDaysComponent from "./components/trip-days";
 import EventsListComponent from "./components/events-list";
 import EventComponent from "./components/event";
@@ -55,7 +55,7 @@ render(tripInfoElement, new TripInfoCostComponent(events).getElement());
 const titleMenuElement = tripMainElement.querySelector(`.trip-controls h2:nth-of-type(1)`);
 const titleFilterElement = tripMainElement.querySelector(`.trip-controls h2:nth-of-type(2)`);
 render(titleMenuElement, new SiteMenuComponent(menuNames).getElement(), RenderPosition.AFTEREND);
-render(titleFilterElement, new FiltersComponent(filterToChecked).getElement(), RenderPosition.AFTEREND);
+render(titleFilterElement, new FilterListComponent(filterToChecked).getElement(), RenderPosition.AFTEREND);
 
 const tripEventsElement = document.querySelector(`.trip-events`);
 

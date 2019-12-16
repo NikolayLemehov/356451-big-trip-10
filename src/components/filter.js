@@ -27,7 +27,7 @@ const createFiltersTemplate = (filterToChecked) => {
   );
 };
 
-export default class SiteMenu {
+export default class FilterList {
   constructor(filterToChecked) {
     this._filterToChecked = filterToChecked;
     this._element = null;
