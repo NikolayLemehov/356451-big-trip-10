@@ -11,7 +11,7 @@ import {generateEvents} from "./mock/events";
 import {filterToChecked, menuNames} from "./const";
 import {render, RenderPosition} from "./utils";
 
-const EVENT_COUNT = 6;
+const EVENT_COUNT = 7;
 const events = generateEvents(EVENT_COUNT);
 const renderEvent = (eventListElement, event) => {
   const onEscKeyDown = (evt) => {
