@@ -176,4 +176,8 @@ export default class EventEditComponent extends AbstractComponent {
   getTemplate() {
     return createEditEventTemplate(this._event);
   }
+
+  getSubmitHandler(handler) {
+    this.getElement().addEventListener(`submit`, handler);
+  }
 }
