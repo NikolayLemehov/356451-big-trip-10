@@ -1,4 +1,4 @@
-import {formatDate, formatTime} from "../utils";
+import {formatDate, formatTime} from "../utils/common";
 import {offerNames, offersStructure} from "../mock/events";
 import AbstractComponent from "./abstract-component";
 

@@ -1,4 +1,4 @@
-import {formatTime, getDuration} from "../utils";
+import {formatTime, getDuration} from "../utils/common";
 import AbstractComponent from "./abstract-component";
 
 const createOffersTemplate = (offers) => offers

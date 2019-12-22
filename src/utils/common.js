@@ -1,9 +1,3 @@
-const RenderPosition = {
-  AFTERBEGIN: `prepend`,
-  AFTEREND: `afterend`,
-  BEFOREEND: `beforeend`
-};
-
 const castTimeFormat = (value) => {
   return value < 10 ? `0${value}` : String(value);
 };
@@ -34,25 +28,4 @@ const getDuration = (start, end) => {
   ${minutes === 0 ? `` : castTimeFormat(minutes) + `M`}`;
 };
 
-const createElement = (template) => {
-  const newElement = document.createElement(`div`);
-  newElement.innerHTML = template;
-
-  return newElement.firstChild;
-};
-
-const renderElement = (container, element, place = RenderPosition.BEFOREEND) => {
-  switch (place) {
-    case RenderPosition.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case RenderPosition.AFTEREND:
-      container.after(element);
-      break;
-    case RenderPosition.BEFOREEND:
-      container.append(element);
-      break;
-  }
-};
-
-export {formatTime, formatDate, getDuration, createElement, renderElement, RenderPosition};
+export {formatTime, formatDate, getDuration};
