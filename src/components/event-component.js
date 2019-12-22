@@ -1,4 +1,5 @@
-import {createElement, formatTime, getDuration} from "../utils";
+import {formatTime, getDuration} from "../utils";
+import AbstractComponent from "./abstract-component";
 
 const createOffersTemplate = (offers) => offers
   .map((offer) => {
@@ -50,25 +51,13 @@ const createEventTemplate = (event) => {
   );
 };
 
-export default class EventComponent {
+export default class EventComponent extends AbstractComponent {
   constructor(event) {
+    super();
     this._event = event;
-    this._element = null;
   }
 
   getTemplate() {
     return createEventTemplate(this._event);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -41,7 +41,7 @@ const createElement = (template) => {
   return newElement.firstChild;
 };
 
-const render = (container, element, place = RenderPosition.BEFOREEND) => {
+const renderElement = (container, element, place = RenderPosition.BEFOREEND) => {
   switch (place) {
     case RenderPosition.AFTERBEGIN:
       container.prepend(element);
@@ -55,4 +55,4 @@ const render = (container, element, place = RenderPosition.BEFOREEND) => {
   }
 };
 
-export {formatTime, formatDate, getDuration, createElement, render, RenderPosition};
+export {formatTime, formatDate, getDuration, createElement, renderElement, RenderPosition};

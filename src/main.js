@@ -9,7 +9,7 @@ import TripInfoCostComponent from "./components/trip-info-cost-component";
 import EmptyComponent from "./components/empty-component";
 import {generateEvents} from "./mock/events";
 import {filterToChecked, menuNames} from "./const";
-import {render, RenderPosition} from "./utils";
+import {renderElement, RenderPosition} from "./utils";
 
 const EVENT_COUNT = 7;
 const events = generateEvents(EVENT_COUNT);
@@ -44,31 +44,31 @@ const renderEvent = (eventListElement, event) => {
 
   editForm.addEventListener(`submit`, replaceEditToEvent);
 
-  render(eventListElement, eventComponent.getElement());
+  renderElement(eventListElement, eventComponent.getElement());
 };
 
 const tripMainElement = document.querySelector(`.trip-main`);
 
 const tripInfoElement = tripMainElement.querySelector(`.trip-info`);
-render(tripInfoElement, new TripInfoCostComponent(events).getElement());
+renderElement(tripInfoElement, new TripInfoCostComponent(events).getElement());
 
 const titleMenuElement = tripMainElement.querySelector(`.trip-controls h2:nth-of-type(1)`);
 const titleFilterElement = tripMainElement.querySelector(`.trip-controls h2:nth-of-type(2)`);
-render(titleMenuElement, new SiteMenuComponent(menuNames).getElement(), RenderPosition.AFTEREND);
-render(titleFilterElement, new FilterListComponent(filterToChecked).getElement(), RenderPosition.AFTEREND);
+renderElement(titleMenuElement, new SiteMenuComponent(menuNames).getElement(), RenderPosition.AFTEREND);
+renderElement(titleFilterElement, new FilterListComponent(filterToChecked).getElement(), RenderPosition.AFTEREND);
 
 const tripEventsElement = document.querySelector(`.trip-events`);
 
-render(tripEventsElement, new TripDayListComponent().getElement());
+renderElement(tripEventsElement, new TripDayListComponent().getElement());
 const tripDaysItemElement = tripEventsElement.querySelector(`.trip-days__item`);
 
 const eventListComponent = new EventsListComponent();
-render(tripDaysItemElement, eventListComponent.getElement());
+renderElement(tripDaysItemElement, eventListComponent.getElement());
 
 if (events.length === 0) {
-  render(tripEventsElement, new EmptyComponent().getElement());
+  renderElement(tripEventsElement, new EmptyComponent().getElement());
 } else {
-  render(tripInfoElement, new TripInfoMainComponent(events).getElement(), RenderPosition.AFTERBEGIN);
+  renderElement(tripInfoElement, new TripInfoMainComponent(events).getElement(), RenderPosition.AFTERBEGIN);
 
   events.forEach((event) => renderEvent(eventListComponent.getElement(), event));
 }
