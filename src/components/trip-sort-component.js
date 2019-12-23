@@ -39,4 +39,24 @@ export default class TripSortComponent extends AbstractComponent {
   getTemplate() {
     return createTripSortTemplate();
   }
+
+  setSortTypeChangeHandler(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+
+      if (!evt.target.classList.contains(`trip-sort__input`)) {
+        return;
+      }
+
+      const sortType = evt.target.id;
+
+      if (this._currenSortType === sortType) {
+        return;
+      }
+
+      this._currenSortType = sortType;
+
+      handler(this._currenSortType);
+    });
+  }
 }

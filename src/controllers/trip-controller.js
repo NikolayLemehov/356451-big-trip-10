@@ -19,6 +19,10 @@ export default class TripController {
   }
 
   render() {
+    if (this._events.length === 0) {
+      renderElement(this._container, new EmptyComponent());
+      return;
+    }
     const getEventDays = (events) => {
       const days = [[]];
       let currentDate = getExactDate(events[0].date.start);
@@ -74,19 +78,15 @@ export default class TripController {
     renderElement(this._container, tripDaysComponent);
 
 
-    if (this._events.length === 0) {
-      renderElement(this._container, new EmptyComponent());
-    } else {
-      renderElement(this._tripInfoElement, new TripInfoMainComponent(this._events), RenderPosition.AFTERBEGIN);
+    renderElement(this._tripInfoElement, new TripInfoMainComponent(this._events), RenderPosition.AFTERBEGIN);
 
-      tripDays.forEach((dayEvents, i) => {
-        const tripDaysItemComponent = new TripDaysItemComponent();
-        renderElement(tripDaysComponent.getElement(), tripDaysItemComponent);
-        renderElement(tripDaysItemComponent.getElement(), new DayInfoComponent(dayEvents[0].date.start, dayCounts[i]));
-        const tripEventsListComponent = new TripEventsListComponent();
-        renderElement(tripDaysItemComponent.getElement(), tripEventsListComponent);
-        dayEvents.forEach((event) => renderEvent(tripEventsListComponent.getElement(), event));
-      });
-    }
+    tripDays.forEach((dayEvents, i) => {
+      const tripDaysItemComponent = new TripDaysItemComponent();
+      renderElement(tripDaysComponent.getElement(), tripDaysItemComponent);
+      renderElement(tripDaysItemComponent.getElement(), new DayInfoComponent(dayEvents[0].date.start, dayCounts[i]));
+      const tripEventsListComponent = new TripEventsListComponent();
+      renderElement(tripDaysItemComponent.getElement(), tripEventsListComponent);
+      dayEvents.forEach((event) => renderEvent(tripEventsListComponent.getElement(), event));
+    });
   }
 }
