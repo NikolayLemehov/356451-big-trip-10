@@ -1,6 +1,6 @@
 import AbstractComponent from "./abstract-component";
 
-export default class EventsListComponent extends AbstractComponent {
+export default class TripEventsListComponent extends AbstractComponent {
   getTemplate() {
     return (
       `<ul class="trip-events__list"></ul>`

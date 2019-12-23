@@ -28,4 +28,6 @@ const getDuration = (start, end) => {
   ${minutes === 0 ? `` : castTimeFormat(minutes) + `M`}`;
 };
 
-export {formatTime, formatDate, getDuration};
+const getExactDate = (date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+export {formatTime, formatDate, getDuration, getExactDate};

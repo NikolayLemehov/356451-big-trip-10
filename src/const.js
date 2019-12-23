@@ -3,5 +3,6 @@ const filterToChecked = new Map(filterNames.map((name, i) => i === 0 ? [name, tr
 
 const menuNames = [`Table`, `Stats`];
 const MONTHS = [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `Jun`, `Jul`, `Aug`, `Sep`, `Oct`, `Nov`, `Dec`];
+const MILLISECONDS_PER_DAY = 86400000;
 
-export {menuNames, MONTHS, filterToChecked};
+export {menuNames, MONTHS, filterToChecked, MILLISECONDS_PER_DAY};

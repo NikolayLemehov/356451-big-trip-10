@@ -20,6 +20,5 @@ renderElement(titleMenuElement, new SiteMenuComponent(menuNames), RenderPosition
 renderElement(titleFilterElement, new FilterListComponent(filterToChecked), RenderPosition.AFTEREND);
 
 const tripEventsElement = document.querySelector(`.trip-events`);
-
 const tripController = new TripController(tripEventsElement, events, tripInfoElement);
 tripController.render();
