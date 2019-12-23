@@ -1,5 +1,6 @@
-import {createElement, formatDate, formatTime} from "../utils";
+import {formatDate, formatTime} from "../utils/common";
 import {offerNames, offersStructure} from "../mock/events";
+import AbstractComponent from "./abstract-component";
 
 const createOfferTemplate = (offer, isChecked) => {
   const {name, title, price} = offer;
@@ -166,25 +167,17 @@ const createEditEventTemplate = (event) => {
   );
 };
 
-export default class EventEditComponent {
+export default class EventEditComponent extends AbstractComponent {
   constructor(event) {
+    super();
     this._event = event;
-    this._element = null;
   }
 
   getTemplate() {
     return createEditEventTemplate(this._event);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  getSubmitHandler(handler) {
+    this.getElement().addEventListener(`submit`, handler);
   }
 }

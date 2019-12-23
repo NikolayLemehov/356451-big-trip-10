@@ -1,5 +1,5 @@
 import {MONTHS} from "../const";
-import {createElement} from "../utils";
+import AbstractComponent from "./abstract-component";
 
 const getPeriod = (events) => {
   const startDate = new Date(events[0].date.start);
@@ -33,25 +33,13 @@ const createTripInfoTemplate = (events) => {
   );
 };
 
-export default class TripInfoMainComponent {
+export default class TripInfoMainComponent extends AbstractComponent {
   constructor(events) {
+    super();
     this._events = events;
-    this._element = null;
   }
 
   getTemplate() {
     return createTripInfoTemplate(this._events);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
