@@ -91,6 +91,7 @@ export default class TripController {
         renderElement(tripDaysItemComponent.getElement(), tripEventsListComponent);
         dayEvents.forEach((event) => renderEvent(tripEventsListComponent.getElement(), event));
       });
+      tripSortComponent.showDate();
     };
 
     const renderSortTrip = (sortedEvents) => {
@@ -101,6 +102,7 @@ export default class TripController {
       const tripEventsListComponent = new TripEventsListComponent();
       renderElement(tripDaysItemComponent.getElement(), tripEventsListComponent);
       sortedEvents.forEach((event) => renderEvent(tripEventsListComponent.getElement(), event));
+      tripSortComponent.hideDate();
     };
 
     renderTripDays();
@@ -111,10 +113,10 @@ export default class TripController {
           renderTripDays();
           break;
         case SortType.TIME:
-          renderSortTrip(this._events.slice().sort((a, b) => (a.date.end - a.date.start) - (b.date.end - b.date.start)));
+          renderSortTrip(this._events.slice().sort((a, b) => (b.date.end - b.date.start) - (a.date.end - a.date.start)));
           break;
         case SortType.PRICE:
-          renderSortTrip(this._events.slice().sort((a, b) => a.price - b.price));
+          renderSortTrip(this._events.slice().sort((a, b) => b.price - a.price));
           break;
       }
     });
