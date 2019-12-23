@@ -82,7 +82,7 @@ export default class TripController {
       tripDays.forEach((dayEvents, i) => {
         const tripDaysItemComponent = new TripDaysItemComponent();
         renderElement(tripDaysComponent.getElement(), tripDaysItemComponent);
-        renderElement(tripDaysItemComponent.getElement(), new DayInfoComponent(dayEvents, dayCounts[i]));
+        renderElement(tripDaysItemComponent.getElement(), new DayInfoComponent(dayEvents[0].date.start, dayCounts[i]));
         const tripEventsListComponent = new TripEventsListComponent();
         renderElement(tripDaysItemComponent.getElement(), tripEventsListComponent);
         dayEvents.forEach((event) => renderEvent(tripEventsListComponent.getElement(), event));

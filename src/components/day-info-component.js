@@ -1,8 +1,7 @@
 import AbstractComponent from "./abstract-component";
 import {MONTHS} from "../const";
 
-const createDayInfoTemplate = (dayEvents, dayCount) => {
-  const date = dayEvents[0].date.start;
+const createDayInfoTemplate = (date, dayCount) => {
   const dateTime = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
   const month = `${MONTHS[date.getMonth()]}`;
 
@@ -15,13 +14,13 @@ const createDayInfoTemplate = (dayEvents, dayCount) => {
 };
 
 export default class DayInfoComponent extends AbstractComponent {
-  constructor(eventsDays, dayCounts) {
+  constructor(date, dayCounts) {
     super();
-    this._eventsDays = eventsDays;
+    this._date = date;
     this._dayCounts = dayCounts;
   }
 
   getTemplate() {
-    return createDayInfoTemplate(this._eventsDays, this._dayCounts);
+    return createDayInfoTemplate(this._date, this._dayCounts);
   }
 }
