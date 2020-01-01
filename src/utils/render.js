@@ -25,4 +25,15 @@ const renderElement = (container, component, place = RenderPosition.BEFOREEND) =
   }
 };
 
-export {createElement, renderElement, RenderPosition};
+const replaceElement = (newComponent, oldComponent) => {
+  const newElement = newComponent.getElement();
+  const oldElement = oldComponent.getElement();
+  const parentElement = oldElement.parentElement;
+  const isExistElements = !!(parentElement && newElement && oldElement);
+
+  if (isExistElements) {
+    parentElement.replaceChild(newElement, oldElement);
+  }
+};
+
+export {createElement, renderElement, RenderPosition, replaceElement};

@@ -1,6 +1,6 @@
 import {formatDate, formatTime} from "../utils/common";
 import {offerNames, offersStructure} from "../mock/events";
-import AbstractComponent from "./abstract-component";
+import AbstractSmartComponent from "./abstract-smart-component";
 
 const createOfferTemplate = (offer, isChecked) => {
   const {name, title, price} = offer;
@@ -24,7 +24,7 @@ const createOfferTemplate = (offer, isChecked) => {
 const createPhotoTemplate = (photoUrl) => `<img class="event__photo" src="${photoUrl}" alt="Event photo">`;
 
 const createEditEventTemplate = (event) => {
-  const {type, city, photos, destination, date, price, offers, isFavorite} = event;
+  const {id, type, city, photos, destination, date, price, offers, isFavorite} = event;
 
   const startDate = `${formatDate(date.start)} ${formatTime(date.start)}`;
   const endDate = `${formatDate(date.end)} ${formatTime(date.end)}`;
@@ -108,7 +108,7 @@ const createEditEventTemplate = (event) => {
 
         <div class="event__field-group  event__field-group--destination">
           <label class="event__label  event__type-output" for="event-destination-1">
-            Sightseeing at
+            ${id} Sightseeing at
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
           <datalist id="destination-list-1">
@@ -134,7 +134,6 @@ const createEditEventTemplate = (event) => {
         <div class="event__field-group  event__field-group--price">
           <label class="event__label" for="event-price-1">
             <span class="visually-hidden">Price</span>
-            
             &euro;
           </label>
           <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
@@ -180,21 +179,44 @@ const createEditEventTemplate = (event) => {
   );
 };
 
-export default class EventEditComponent extends AbstractComponent {
+const parseFormData = (formData) => {
+  return {
+    isFavorite: formData.get(`event-favorite`),
+  };
+};
+
+export default class EventEditComponent extends AbstractSmartComponent {
   constructor(event) {
     super();
     this._event = event;
+    this._submitHandler = null;
   }
 
   getTemplate() {
     return createEditEventTemplate(this._event);
   }
 
-  getSubmitHandler(handler) {
+  recoveryListeners() {
+    this.setSubmitHandler(this._submitHandler);
+  }
+
+  reset() {
+    this.rerender();
+  }
+
+  setSubmitHandler(handler) {
     this.getElement().addEventListener(`submit`, handler);
+    this._submitHandler = handler;
+  }
+
+  getData() {
+    const form = this.getElement();
+    const formData = new FormData(form);
+
+    return parseFormData(formData);
   }
 
   setFavoriteToggleHandler(handler) {
-    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, handler);
   }
 }

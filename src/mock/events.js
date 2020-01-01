@@ -106,9 +106,10 @@ types.forEach((type) => {
   typeToOffer.set(type, getOffer(shuffle(offerNames.slice()).slice(count === 0 ? offerNames.length : -1 * count)));
 });
 
-const generateEvent = (date) => {
+const generateEvent = (date, i) => {
   const type = getRandomArrayItem(types);
   return {
+    id: i,
     type,
     city: getRandomArrayItem(cities),
     photos: generatePhotos(),
@@ -124,7 +125,7 @@ const generateEvents = (count) => {
   let currentDate = new Date(2019, 11, 4);
   return new Array(count)
     .fill(``)
-    .map(() => generateEvent(currentDate));
+    .map((it, i) => generateEvent(currentDate, i));
 };
 
 export {generateEvents, offersStructure, offerNames};
