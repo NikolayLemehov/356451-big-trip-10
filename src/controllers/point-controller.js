@@ -3,8 +3,9 @@ import EventEditComponent from "../components/event-edit-component";
 import {renderElement} from "../utils/render";
 
 export default class PointController {
-  constructor(container) {
+  constructor(container, onDataChange) {
     this._container = container;
+    this._onDatachange = onDataChange;
   }
 
   render(event) {
