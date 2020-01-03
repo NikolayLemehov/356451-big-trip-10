@@ -1,4 +1,18 @@
-const types = [`bus`, `check-in`, `drive`, `flight`, `restaurant`, `ship`, `sightseeing`, `taxi`, `train`, `transport`, `trip`];
+const GroupeType = {
+  TRANSFER: `Transfer`,
+  ACTIVITY: `Activity`,
+};
+const groupTypeToPreposition = new Map([
+  [GroupeType.TRANSFER, `to`],
+  [GroupeType.ACTIVITY, `in`],
+]);
+const groupToTypes = new Map([
+  [GroupeType.TRANSFER, [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`]],
+  [GroupeType.ACTIVITY, [`check-in`, `restaurant`, `sightseeing`]],
+]);
+const types = Array.from(groupToTypes.values()).reduce((acc, it) => acc.concat(it), []);
+const typeToGroup = new Map();
+groupToTypes.forEach((value, key) => value.forEach((type) => typeToGroup.set(type, key)));
 const cities = [`Geneva`, `Copenhagen`, `Amsterdam`, `Lisbon`, `Riga`, `Helsinki`, `Dresden`];
 const phrases = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
@@ -128,4 +142,4 @@ const generateEvents = (count) => {
     .map((it, i) => generateEvent(currentDate, i));
 };
 
-export {generateEvents, offersStructure, offerNames};
+export {generateEvents, offersStructure, offerNames, groupToTypes, groupTypeToPreposition, typeToGroup, cities};
