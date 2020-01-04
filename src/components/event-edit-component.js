@@ -1,7 +1,9 @@
+import flatpickr from 'flatpickr';
 import {formatDate, formatTime} from "../utils/common";
 import {cities, groupToTypes, groupTypeToPreposition, offerNames, offersStructure, typeToGroup} from "../mock/events";
 import AbstractSmartComponent from "./abstract-smart-component";
 
+const FLATPICKR_DATE_FORMAT = `d/m/y H:i`;
 const eventTypeTemplate = (type, checkedType) => {
   const isCheckedType = type === checkedType ? `checked` : ``;
   return (
@@ -158,7 +160,10 @@ export default class EventEditComponent extends AbstractSmartComponent {
     this._event = event;
     this._type = event.type;
     this._submitHandler = null;
+    this._flatpickr = null;
 
+    this._applyFlatpickr();
+    // this._applyFlatpickrEnd();
     this._subscribeOnEvents();
   }
 
@@ -173,6 +178,13 @@ export default class EventEditComponent extends AbstractSmartComponent {
     this._subscribeOnEvents();
   }
 
+  rerender() {
+    super.rerender();
+
+    this._applyFlatpickr();
+    // this._applyFlatpickrEnd();
+  }
+
   reset() {
     const event = this._event;
 
@@ -183,6 +195,33 @@ export default class EventEditComponent extends AbstractSmartComponent {
   setSubmitHandler(handler) {
     this.getElement().addEventListener(`submit`, handler);
     this._submitHandler = handler;
+  }
+
+  _applyFlatpickr() {
+    const DateType = {
+      START: `start`,
+      END: `end`,
+    };
+    if (this._flatpickr) {
+      this._flatpickr.destroy();
+      this._flatpickr = null;
+    }
+    this._applyFlatpickrItem(DateType.START);
+    this._applyFlatpickrItem(DateType.END);
+  }
+
+  _applyFlatpickrItem(dateType) {
+    const startDateElement = this.getElement().querySelector(`#event-${dateType}-time-1`);
+    this._flatpickr = flatpickr(startDateElement, {
+      altInput: true,
+      allowInput: true,
+      altFormat: FLATPICKR_DATE_FORMAT,
+      dateFormat: FLATPICKR_DATE_FORMAT,
+      enableTime: true,
+      // eslint-disable-next-line camelcase
+      time_24hr: true,
+      defaultDate: this._event.date[dateType] === null ? new Date() : this._event.date[dateType],
+    });
   }
 
   getData() {
