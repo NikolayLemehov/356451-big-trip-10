@@ -7,7 +7,7 @@ import {filterToChecked, menuNames} from "./const";
 import {renderElement, RenderPosition} from "./utils/render";
 import EventsModel from "./models/events-model";
 
-const EVENT_COUNT = 7;
+const EVENT_COUNT = 8;
 const events = generateEvents(EVENT_COUNT);
 
 const tripMainElement = document.querySelector(`.trip-main`);
