@@ -1,31 +1,24 @@
+import moment from 'moment';
+
 const castTimeFormat = (value) => {
   return value < 10 ? `0${value}` : String(value);
 };
 
 const formatTime = (date) => {
-  const hours = castTimeFormat(date.getHours());
-  const minutes = castTimeFormat(date.getMinutes());
-
-  return `${hours}:${minutes}`;
+  return moment(date).format(`hh:mm`);
 };
 
 const formatDate = (date) => {
-  const years = castTimeFormat(date.getFullYear()).slice(-2);
-  const months = castTimeFormat(date.getMonth() + 1);
-  const days = castTimeFormat(date.getDate());
-
-  return `${days}/${months}/${years}`;
+  return moment(date).format(`DD/MM/YY`);
 };
 
 const getDuration = (start, end) => {
-  const interval = new Date(end - start);
-  const days = interval.getDate() - 1;
-  const hours = interval.getUTCHours();
-  const minutes = interval.getMinutes();
+  const interval = moment.duration(end - start);
+  const days = interval.days() >= 1 ? `${castTimeFormat(interval.days())}D ` : ``;
+  const hours = interval.asHours() >= 1 ? `${castTimeFormat(interval.hours())}H ` : ``;
+  const minutes = `${castTimeFormat(interval.minutes())}M`;
 
-  return `${days === 0 ? `` : castTimeFormat(days) + `D `}\
-  ${hours === 0 ? `` : castTimeFormat(hours) + `H `}\
-  ${minutes === 0 ? `` : castTimeFormat(minutes) + `M`}`;
+  return `${days}${hours}${minutes}`;
 };
 
 const getExactDate = (date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());

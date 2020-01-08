@@ -1,4 +1,18 @@
-const types = [`bus`, `check-in`, `drive`, `flight`, `restaurant`, `ship`, `sightseeing`, `taxi`, `train`, `transport`, `trip`];
+const GroupeType = {
+  TRANSFER: `Transfer`,
+  ACTIVITY: `Activity`,
+};
+const groupTypeToPreposition = new Map([
+  [GroupeType.TRANSFER, `to`],
+  [GroupeType.ACTIVITY, `in`],
+]);
+const groupToTypes = new Map([
+  [GroupeType.TRANSFER, [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`]],
+  [GroupeType.ACTIVITY, [`check-in`, `restaurant`, `sightseeing`]],
+]);
+const types = Array.from(groupToTypes.values()).reduce((acc, it) => acc.concat(it), []);
+const typeToGroup = new Map();
+groupToTypes.forEach((value, key) => value.forEach((type) => typeToGroup.set(type, key)));
 const cities = [`Geneva`, `Copenhagen`, `Amsterdam`, `Lisbon`, `Riga`, `Helsinki`, `Dresden`];
 const phrases = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
@@ -79,6 +93,7 @@ const shuffle = (array) => {
   return array;
 };
 
+const getRandomBoolean = () => Math.random() < 0.5;
 const getRandomIntegerNumber = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));
 const getRandomArrayItem = (array) => array[getRandomIntegerNumber(0, array.length - 1)];
 
@@ -105,9 +120,10 @@ types.forEach((type) => {
   typeToOffer.set(type, getOffer(shuffle(offerNames.slice()).slice(count === 0 ? offerNames.length : -1 * count)));
 });
 
-const generateEvent = (date) => {
+const generateEvent = (date, i) => {
   const type = getRandomArrayItem(types);
   return {
+    id: i,
     type,
     city: getRandomArrayItem(cities),
     photos: generatePhotos(),
@@ -115,6 +131,7 @@ const generateEvent = (date) => {
     date: getDate(date),
     price: getRandomIntegerNumber(Price.MIN, Price.MAX),
     offers: typeToOffer.get(type),
+    isFavorite: getRandomBoolean(),
   };
 };
 
@@ -122,7 +139,7 @@ const generateEvents = (count) => {
   let currentDate = new Date(2019, 11, 4);
   return new Array(count)
     .fill(``)
-    .map(() => generateEvent(currentDate));
+    .map((it, i) => generateEvent(currentDate, i));
 };
 
-export {generateEvents, offersStructure, offerNames};
+export {generateEvents, offersStructure, offerNames, groupToTypes, groupTypeToPreposition, typeToGroup, cities};

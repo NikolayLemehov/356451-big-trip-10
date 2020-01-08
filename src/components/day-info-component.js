@@ -1,9 +1,9 @@
 import AbstractComponent from "./abstract-component";
 import {MONTHS} from "../const";
 
-const createDayInfoTemplate = (isEmpty, date, dayCount) => {
+const createDayInfoTemplate = (date, dayCount = null) => {
   let dayInfoContent = ``;
-  if (!isEmpty) {
+  if (dayCount) {
     const dateTime = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
     const month = `${MONTHS[date.getMonth()]}`;
     dayInfoContent = `<span class="day__counter">${dayCount}</span>

@@ -5,6 +5,7 @@ import TripController from "./controllers/trip-controller";
 import {generateEvents} from "./mock/events";
 import {filterToChecked, menuNames} from "./const";
 import {renderElement, RenderPosition} from "./utils/render";
+import EventsModel from "./models/events-model";
 
 const EVENT_COUNT = 7;
 const events = generateEvents(EVENT_COUNT);
@@ -19,6 +20,8 @@ const titleFilterElement = tripMainElement.querySelector(`.trip-controls h2:nth-
 renderElement(titleMenuElement, new SiteMenuComponent(menuNames), RenderPosition.AFTEREND);
 renderElement(titleFilterElement, new FilterListComponent(filterToChecked), RenderPosition.AFTEREND);
 
+const eventsModel = new EventsModel();
+eventsModel.setEvents(events);
 const tripEventsElement = document.querySelector(`.trip-events`);
-const tripController = new TripController(tripEventsElement, events, tripInfoElement);
+const tripController = new TripController(tripEventsElement, tripInfoElement, eventsModel);
 tripController.render();
