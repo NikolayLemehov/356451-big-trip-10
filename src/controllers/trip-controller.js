@@ -23,6 +23,9 @@ export default class TripController {
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onSortTypeChange = this._onSortTypeChange.bind(this);
+
+    this._tripSortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
   render() {
@@ -39,22 +42,22 @@ export default class TripController {
     renderElement(this._tripInfoElement, new TripInfoMainComponent(events), RenderPosition.AFTERBEGIN);
 
     this._renderTripDays();
-    this._tripSortComponent.setSortTypeChangeHandler((sortType) => {
-      this._tripDaysComponent.getElement().innerHTML = ``;
-      switch (sortType) {
-        case SortType.EVENT:
-          this._renderTripDays();
-          break;
-        case SortType.TIME:
-          this._renderSortTrip(this._eventsModel.getEvents().slice().sort((a, b) => (b.date.end - b.date.start) - (a.date.end - a.date.start)));
-          break;
-        case SortType.PRICE:
-          this._renderSortTrip(this._eventsModel.getEvents().slice().sort((a, b) => b.price - a.price));
-          break;
-      }
-    });
   }
 
+  _onSortTypeChange(sortType) {
+    this._tripDaysComponent.getElement().innerHTML = ``;
+    switch (sortType) {
+      case SortType.EVENT:
+        this._renderTripDays();
+        break;
+      case SortType.TIME:
+        this._renderSortTrip(this._eventsModel.getEvents().slice().sort((a, b) => (b.date.end - b.date.start) - (a.date.end - a.date.start)));
+        break;
+      case SortType.PRICE:
+        this._renderSortTrip(this._eventsModel.getEvents().slice().sort((a, b) => b.price - a.price));
+        break;
+    }
+  }
 
   _renderSortTrip(sortedEvents) {
     this._tripControllers = this._renderStructure(sortedEvents);
