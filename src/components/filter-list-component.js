@@ -20,8 +20,7 @@ const createFiltersTemplate = (filterToChecked) => {
   const filterMarkUp = [...filterToChecked.keys()].map((key) => createFilterTemplate(key, filterToChecked.get(key))).join(``);
 
   return (
-    `<h2 class="visually-hidden">Filter events</h2>
-    <form class="trip-filters" action="#" method="get">
+    `<form class="trip-filters" action="#" method="get">
       ${filterMarkUp}
       <button class="visually-hidden" type="submit">Accept filter</button>
     </form>`
