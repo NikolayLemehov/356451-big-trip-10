@@ -12,7 +12,8 @@ const createSiteMenuTemplate = (names) => {
   const menuMarkUp = names.map((name, i) => createMenuTemplate(name, i === CHECKED_MENU_NUMBER - 1)).join(``);
 
   return (
-    `<nav class="trip-controls__trip-tabs  trip-tabs">
+    `<h2 class="visually-hidden">Switch trip view</h2>
+    <nav class="trip-controls__trip-tabs  trip-tabs">
       ${menuMarkUp}
     </nav>`
   );
