@@ -2,24 +2,24 @@ import AbstractComponent from "./abstract-component";
 
 const FILTER_ID_PREFIX = `filter-`;
 
-const createFilterTemplate = (name, isChecked) => {
+const createFilterTemplate = ({name, isChecked}) => {
   return (
     `<div class="trip-filters__filter">
-      <input 
-      id="${FILTER_ID_PREFIX}${name}" 
-      class="trip-filters__filter-input  visually-hidden" 
-      type="radio" 
-      name="trip-filter" 
+      <input
+      id="${FILTER_ID_PREFIX}${name}"
+      class="trip-filters__filter-input  visually-hidden"
+      type="radio"
+      name="trip-filter"
       value="${name}"
-      ${isChecked ? `checked` : ``} 
+      ${isChecked ? `checked` : ``}
       >
       <label class="trip-filters__filter-label" for="filter-${name}">${name}</label>
     </div>`
   );
 };
 
-const createFiltersTemplate = (filterToChecked) => {
-  const filterMarkUp = [...filterToChecked.keys()].map((key) => createFilterTemplate(key, filterToChecked.get(key))).join(``);
+const createFiltersTemplate = (filters) => {
+  const filterMarkUp = filters.map((it) => createFilterTemplate(it)).join(``);
 
   return (
     `<form class="trip-filters" action="#" method="get">
@@ -30,13 +30,13 @@ const createFiltersTemplate = (filterToChecked) => {
 };
 
 export default class FilterListComponent extends AbstractComponent {
-  constructor(filterToChecked) {
+  constructor(filters) {
     super();
-    this._filterToChecked = filterToChecked;
+    this._filtes = filters;
   }
 
   getTemplate() {
-    return createFiltersTemplate(this._filterToChecked);
+    return createFiltersTemplate(this._filtes);
   }
 
   setFilterTypeChangeHandler(handler) {

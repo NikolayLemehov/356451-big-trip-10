@@ -1,6 +1,5 @@
 import {renderElement, RenderPosition, replaceElement} from "../utils/render";
 import FilterListComponent from "../components/filter-list-component";
-import {filterToChecked} from "../const";
 
 export default class FilterController {
   constructor(container, eventsModel) {
@@ -13,7 +12,7 @@ export default class FilterController {
   render() {
     const oldComponent = this._filterListComponent;
 
-    this._filterListComponent = new FilterListComponent(filterToChecked);
+    this._filterListComponent = new FilterListComponent(this._eventsModel.getFilters());
 
     if (oldComponent) {
       replaceElement(this._filterListComponent, oldComponent);
