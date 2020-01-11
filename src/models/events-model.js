@@ -4,6 +4,8 @@ export default class EventsModel {
   constructor() {
     this._events = [];
     this._activeFilterType = FilterType.EVERYTHING;
+
+    this._filterChangeHandlers = [];
   }
 
   getEvents() {
@@ -50,5 +52,14 @@ export default class EventsModel {
 
   setFilter(filterType) {
     this._activeFilterType = filterType;
+    this._callHandlers(this._filterChangeHandlers);
+  }
+
+  setFilterChangeHandler(handler) {
+    this._filterChangeHandlers.push(handler);
+  }
+
+  _callHandlers(handlers) {
+    handlers.forEach((handler) => handler());
   }
 }
