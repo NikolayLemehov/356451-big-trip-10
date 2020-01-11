@@ -9,5 +9,10 @@ const SortType = {
   TIME: `time`,
   PRICE: `price`,
 };
+const FilterType = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`,
+};
 
-export {menuNames, MONTHS, filterToChecked, MILLISECONDS_PER_DAY, SortType};
+export {menuNames, MONTHS, filterToChecked, MILLISECONDS_PER_DAY, SortType, FilterType};
