@@ -26,6 +26,8 @@ export default class TripController {
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
 
     this._tripSortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
+
+    this._eventsModel.setFilterChangeHandler(this._onFilterChange);
   }
 
   render() {
@@ -120,5 +122,9 @@ export default class TripController {
 
   _onViewChange() {
     this._tripControllers.forEach((it) => it.setDefaultView());
+  }
+
+  _onFilterChange() {
+
   }
 }
