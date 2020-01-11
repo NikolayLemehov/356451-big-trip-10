@@ -24,6 +24,7 @@ export default class TripController {
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
 
     this._tripSortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
 
@@ -31,7 +32,7 @@ export default class TripController {
   }
 
   render() {
-    const events = this._eventsModel.getEvents();
+    const events = this._eventsModel.getEventsByFilter();
     if (events.length === 0) {
       renderElement(this._container, new EmptyComponent());
       return;
@@ -43,20 +44,21 @@ export default class TripController {
 
     renderElement(this._tripInfoElement, new TripInfoMainComponent(events), RenderPosition.AFTERBEGIN);
 
-    this._renderTripDays();
+    this._renderTripDays(events);
   }
 
   _onSortTypeChange(sortType) {
+    const events = this._eventsModel.getEventsByFilter();
     this._tripDaysComponent.getElement().innerHTML = ``;
     switch (sortType) {
       case SortType.EVENT:
-        this._renderTripDays();
+        this._renderTripDays(events);
         break;
       case SortType.TIME:
-        this._renderSortTrip(this._eventsModel.getEvents().slice().sort((a, b) => (b.date.end - b.date.start) - (a.date.end - a.date.start)));
+        this._renderSortTrip(events.slice().sort((a, b) => (b.date.end - b.date.start) - (a.date.end - a.date.start)));
         break;
       case SortType.PRICE:
-        this._renderSortTrip(this._eventsModel.getEvents().slice().sort((a, b) => b.price - a.price));
+        this._renderSortTrip(events.slice().sort((a, b) => b.price - a.price));
         break;
     }
   }
@@ -66,8 +68,11 @@ export default class TripController {
     this._tripSortComponent.hideDate();
   }
 
-  _renderTripDays() {
-    const tripDays = this._getTripDays(this._eventsModel.getEvents());
+  _renderTripDays(events) {
+    if (events.length === 0) {
+      return;
+    }
+    const tripDays = this._getTripDays(events);
     let storageDay = 0;
     const dayCounts = tripDays.map((dayEvents, i) => {
       storageDay += i === 0 ? 1 : (getExactDate(dayEvents[0].date.start) - getExactDate(tripDays[i - 1][0].date.start)) / MILLISECONDS_PER_DAY;
@@ -113,6 +118,17 @@ export default class TripController {
     });
   }
 
+  _removeTripControllers() {
+    this._tripControllers.forEach((pointController) => pointController.destroy());
+    this._tripControllers = [];
+    this._tripDaysComponent.getElement().innerHTML = ``;
+  }
+
+  _updateEvens() {
+    this._removeTripControllers();
+    this._renderTripDays(this._eventsModel.getEventsByFilter());
+  }
+
   _onDataChange(pointController, oldEvent, newEvent) {
     const isSuccess = this._eventsModel.updateEvent(oldEvent.id, newEvent);
     if (isSuccess) {
@@ -125,6 +141,6 @@ export default class TripController {
   }
 
   _onFilterChange() {
-
+    this._updateEvens();
   }
 }

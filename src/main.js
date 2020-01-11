@@ -8,7 +8,7 @@ import {renderElement, RenderPosition} from "./utils/render";
 import EventsModel from "./models/events-model";
 import 'flatpickr/dist/flatpickr.css';
 
-const EVENT_COUNT = 8;
+const EVENT_COUNT = 10;
 const events = generateEvents(EVENT_COUNT);
 
 const tripMainElement = document.querySelector(`.trip-main`);

@@ -25,6 +25,11 @@ const renderElement = (container, component, place = RenderPosition.BEFOREEND) =
   }
 };
 
+const removeElement = (component) => {
+  component.getElement().remove();
+  component.removeElement();
+};
+
 const replaceElement = (newComponent, oldComponent) => {
   const newElement = newComponent.getElement();
   const oldElement = oldComponent.getElement();
@@ -36,4 +41,4 @@ const replaceElement = (newComponent, oldComponent) => {
   }
 };
 
-export {createElement, renderElement, RenderPosition, replaceElement};
+export {createElement, renderElement, removeElement, RenderPosition, replaceElement};
