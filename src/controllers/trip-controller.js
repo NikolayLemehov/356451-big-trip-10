@@ -102,12 +102,12 @@ export default class TripController {
     const tripEventsListComponent = new TripEventsListComponent();
     renderElement(tripDaysItemComponent.getElement(), tripEventsListComponent);
 
-    return this._renderEvents(tripEventsListComponent.getElement(), events, this._onDataChange, this._onViewChange);
+    return this._renderEvents(tripEventsListComponent.getElement(), events);
   }
 
-  _renderEvents(container, events, onDataChange, onViewChange) {
+  _renderEvents(container, events) {
     return events.map((event) => {
-      const pointController = new PointController(container, onDataChange, onViewChange);
+      const pointController = new PointController(container, this._onDataChange, this._onViewChange);
       pointController.render(event);
       return pointController;
     });
