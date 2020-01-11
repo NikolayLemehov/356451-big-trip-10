@@ -1,6 +1,9 @@
+import {FilterType} from "../const";
+
 export default class EventsModel {
   constructor() {
     this._events = [];
+    this._activeFilterType = FilterType.EVERYTHING;
   }
 
   getEvents() {
@@ -21,5 +24,18 @@ export default class EventsModel {
     this._events = [].concat(this._events.slice(0, index), event, this._events.slice(index + 1));
 
     return true;
+  }
+
+  getEventsByFilter() {
+    const nowDate = new Date();
+    switch (this._activeFilterType) {
+      case FilterType.EVERYTHING:
+        return this._events;
+      case FilterType.FUTURE:
+        return this._events.filter((it) => it.date.start > nowDate);
+      case FilterType.PAST:
+        return this._events.filter((it) => it.date.start <= nowDate);
+    }
+    return false;
   }
 }
