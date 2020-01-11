@@ -38,4 +38,13 @@ export default class EventsModel {
     }
     return false;
   }
+
+  getFilters() {
+    return Object.values(FilterType).map((filterType) => {
+      return {
+        name: filterType,
+        isChecked: filterType === this._activeFilterType,
+      };
+    });
+  }
 }
