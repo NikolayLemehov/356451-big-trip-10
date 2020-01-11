@@ -1,3 +1,5 @@
+import {getExactDate} from "../utils/common";
+
 const GroupeType = {
   TRANSFER: `Transfer`,
   ACTIVITY: `Activity`,
@@ -136,10 +138,11 @@ const generateEvent = (date, i) => {
 };
 
 const generateEvents = (count) => {
-  let currentDate = new Date(2019, 11, 4);
+  let date = getExactDate(new Date());
+  date.setDate(date.getDate() - 3);
   return new Array(count)
     .fill(``)
-    .map((it, i) => generateEvent(currentDate, i));
+    .map((it, i) => generateEvent(date, i));
 };
 
 export {generateEvents, offersStructure, offerNames, groupToTypes, groupTypeToPreposition, typeToGroup, cities};
