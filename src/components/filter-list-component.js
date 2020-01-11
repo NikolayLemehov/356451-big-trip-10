@@ -1,10 +1,12 @@
 import AbstractComponent from "./abstract-component";
 
+const FILTER_ID_PREFIX = `filter-`;
+
 const createFilterTemplate = (name, isChecked) => {
   return (
     `<div class="trip-filters__filter">
       <input 
-      id="filter-${name}" 
+      id="${FILTER_ID_PREFIX}${name}" 
       class="trip-filters__filter-input  visually-hidden" 
       type="radio" 
       name="trip-filter" 
@@ -35,5 +37,12 @@ export default class FilterListComponent extends AbstractComponent {
 
   getTemplate() {
     return createFiltersTemplate(this._filterToChecked);
+  }
+
+  setFilterTypeChangeHandler(handler) {
+    this.getElement().addEventListener(`change`, (evt) => {
+      const filterType = evt.target.id.substring(FILTER_ID_PREFIX.length);
+      handler(filterType);
+    });
   }
 }
