@@ -66,6 +66,11 @@ export default class TripSortComponent extends AbstractComponent {
 
       this._form.querySelector(`#sort-${this._currenSortType}`).removeAttribute(`checked`);
       this._form.querySelector(`#sort-${sortType}`).setAttribute(`checked`, `checked`);
+      if (sortType === SortType.EVENT) {
+        this._showDate();
+      } else {
+        this._hideDate();
+      }
 
       this._currenSortType = sortType;
 
@@ -73,11 +78,11 @@ export default class TripSortComponent extends AbstractComponent {
     });
   }
 
-  hideDate() {
+  _hideDate() {
     this._span.innerHTML = ``;
   }
 
-  showDate() {
+  _showDate() {
     this._span.text = `Day`;
   }
 }

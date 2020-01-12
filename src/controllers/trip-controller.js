@@ -65,7 +65,6 @@ export default class TripController {
 
   _renderSortTrip(sortedEvents) {
     this._tripControllers = this._renderStructure(sortedEvents);
-    this._tripSortComponent.hideDate();
   }
 
   _renderTripDays(events) {
@@ -82,7 +81,6 @@ export default class TripController {
     this._tripControllers = tripDays.reduce((acc, dayEvents, i) => {
       return acc.concat(this._renderStructure(dayEvents, dayEvents[0].date.start, dayCounts[i]));
     }, []);
-    this._tripSortComponent.showDate();
   }
 
   _getTripDays(events) {
