@@ -83,6 +83,6 @@ export default class TripSortComponent extends AbstractComponent {
   }
 
   _showDate() {
-    this._span.text = `Day`;
+    this._span.textContent = `Day`;
   }
 }
