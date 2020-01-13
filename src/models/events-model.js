@@ -1,9 +1,10 @@
-import {FilterType} from "../const";
+import {FilterType, SortType} from "../const";
 
 export default class EventsModel {
   constructor() {
     this._events = [];
     this._activeFilterType = FilterType.EVERYTHING;
+    this._activeSortType = SortType.EVENT;
 
     this._filterChangeHandlers = [];
   }
@@ -57,6 +58,24 @@ export default class EventsModel {
 
   setFilterChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
+  }
+
+  getSorts() {
+    return Object.values(SortType).map((sortType) => {
+      return {
+        name: sortType,
+        isChecked: sortType === this._activeSortType,
+        haveSvg: sortType !== SortType.EVENT,
+      };
+    });
+  }
+
+  getSortType() {
+    return this._activeSortType;
+  }
+
+  setSortType(sortType) {
+    this._activeSortType = sortType;
   }
 
   _callHandlers(handlers) {

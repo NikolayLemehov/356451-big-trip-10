@@ -18,7 +18,7 @@ export default class TripController {
 
     this._tripControllers = [];
 
-    this._tripSortComponent = new TripSortComponent();
+    this._tripSortComponent = new TripSortComponent(this._eventsModel.getSorts());
     this._tripDaysComponent = new TripDaysComponent();
 
     this._onDataChange = this._onDataChange.bind(this);
@@ -44,13 +44,18 @@ export default class TripController {
 
     renderElement(this._tripInfoElement, new TripInfoMainComponent(events), RenderPosition.AFTERBEGIN);
 
-    this._renderTripDays(events);
+    this._renderEvents();
   }
 
   _onSortTypeChange(sortType) {
+    this._eventsModel.setSortType(sortType);
+    this._updateEvens();
+  }
+
+  _renderEvents() {
     const events = this._eventsModel.getEventsByFilter();
     this._tripDaysComponent.getElement().innerHTML = ``;
-    switch (sortType) {
+    switch (this._eventsModel.getSortType()) {
       case SortType.EVENT:
         this._renderTripDays(events);
         break;
@@ -105,10 +110,10 @@ export default class TripController {
     const tripEventsListComponent = new TripEventsListComponent();
     renderElement(tripDaysItemComponent.getElement(), tripEventsListComponent);
 
-    return this._renderEvents(tripEventsListComponent.getElement(), events);
+    return this._renderOneDayEvents(tripEventsListComponent.getElement(), events);
   }
 
-  _renderEvents(container, events) {
+  _renderOneDayEvents(container, events) {
     return events.map((event) => {
       const pointController = new PointController(container, this._onDataChange, this._onViewChange);
       pointController.render(event);
@@ -124,7 +129,7 @@ export default class TripController {
 
   _updateEvens() {
     this._removeTripControllers();
-    this._renderTripDays(this._eventsModel.getEventsByFilter());
+    this._renderEvents();
   }
 
   _onDataChange(pointController, oldEvent, newEvent) {

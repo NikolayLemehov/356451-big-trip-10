@@ -41,6 +41,7 @@ export default class FilterListComponent extends AbstractComponent {
 
   setFilterTypeChangeHandler(handler) {
     this.getElement().addEventListener(`change`, (evt) => {
+      evt.preventDefault();
       const filterType = evt.target.id.substring(FILTER_ID_PREFIX.length);
       handler(filterType);
     });
