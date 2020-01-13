@@ -25,5 +25,10 @@ const EmptyEvent = {
   isFavorite: false,
   isNewEvent: true,
 };
+const Mode = {
+  DEFAULT: `default`,
+  EDIT: `edit`,
+  ADDING: `adding`,
+};
 
-export {menuNames, MONTHS, MILLISECONDS_PER_DAY, SortType, FilterType, EmptyEvent};
+export {menuNames, MONTHS, MILLISECONDS_PER_DAY, SortType, FilterType, EmptyEvent, Mode};

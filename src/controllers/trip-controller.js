@@ -5,10 +5,10 @@ import TripEventsListComponent from "../components/trip-events-list-component";
 import TripSortComponent from "../components/trip-sort-component";
 import DayInfoComponent from "../components/day-info-component";
 import TripDaysItemComponent from "../components/trip-days-item-component";
-import PointController, {Mode} from "./point-controller";
+import PointController from "./point-controller";
 import {renderElement, RenderPosition} from "../utils/render";
 import {formatDate, getExactDate} from "../utils/common";
-import {EmptyEvent, MILLISECONDS_PER_DAY, SortType} from "../const";
+import {EmptyEvent, MILLISECONDS_PER_DAY, Mode, SortType} from "../const";
 
 export default class TripController {
   constructor(container, tripInfoElement, eventsModel) {
