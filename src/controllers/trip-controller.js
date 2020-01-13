@@ -47,6 +47,10 @@ export default class TripController {
     this._renderEvents();
   }
 
+  createEvent() {
+
+  }
+
   _onSortTypeChange(sortType) {
     this._eventsModel.setSortType(sortType);
     this._updateEvens();
