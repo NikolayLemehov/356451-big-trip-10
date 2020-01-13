@@ -134,6 +134,7 @@ const generateEvent = (date, i) => {
     price: getRandomIntegerNumber(Price.MIN, Price.MAX),
     offers: typeToOffer.get(type),
     isFavorite: getRandomBoolean(),
+    isNewEvent: false,
   };
 };
 
@@ -145,4 +146,4 @@ const generateEvents = (count) => {
     .map((it, i) => generateEvent(date, i));
 };
 
-export {generateEvents, offersStructure, offerNames, groupToTypes, groupTypeToPreposition, typeToGroup, cities};
+export {generateEvents, offersStructure, offerNames, groupToTypes, groupTypeToPreposition, typeToGroup, cities, getDate};

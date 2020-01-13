@@ -9,10 +9,6 @@ export default class EventsModel {
     this._filterChangeHandlers = [];
   }
 
-  getEvents() {
-    return this._events;
-  }
-
   setEvents(events) {
     this._events = Array.from(events);
   }
@@ -33,7 +29,7 @@ export default class EventsModel {
     const nowDate = new Date();
     switch (this._activeFilterType) {
       case FilterType.EVERYTHING:
-        return this._events;
+        return this._events.slice().sort((a, b) => a.date.start - b.date.start);
       case FilterType.FUTURE:
         return this._events.filter((it) => it.date.start > nowDate);
       case FilterType.PAST:
@@ -44,6 +40,10 @@ export default class EventsModel {
 
   removeEvent(id) {
     return this.updateEvent(id, []);
+  }
+
+  addEvent(event) {
+    this._events = [].concat(event, this._events);
   }
 
   getFilters() {

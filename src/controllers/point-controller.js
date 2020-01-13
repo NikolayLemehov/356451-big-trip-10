@@ -1,6 +1,6 @@
 import EventComponent from "../components/event-component";
 import EventEditComponent from "../components/event-edit-component";
-import {removeElement, renderElement, replaceElement} from "../utils/render";
+import {removeElement, renderElement, RenderPosition, replaceElement} from "../utils/render";
 
 const Mode = {
   DEFAULT: `default`,
@@ -23,9 +23,10 @@ export default class PointController {
     this._replaceEditToEvent = this._replaceEditToEvent.bind(this);
   }
 
-  render(event) {
+  render(event, mode) {
     const oldEventComponent = this._eventComponent;
     const oldEventEditComponent = this._eventEditComponent;
+    this._mode = mode;
 
     this._eventComponent = new EventComponent(event);
     this._eventEditComponent = new EventEditComponent(event);
@@ -44,6 +45,7 @@ export default class PointController {
     this._eventEditComponent.setSubmitHandler((evt) => {
       evt.preventDefault();
       const data = this._eventEditComponent.getData();
+      data.isNewEvent = false;
       this._onDataChange(this, event, Object.assign({}, event, data));
       this._replaceEditToEvent();
     });
@@ -52,11 +54,24 @@ export default class PointController {
       this._onDataChange(this, event, null);
     });
 
-    if (oldEventEditComponent && oldEventComponent) {
-      replaceElement(this._eventComponent, oldEventComponent);
-      replaceElement(this._eventEditComponent, oldEventEditComponent);
-    } else {
-      renderElement(this._container, this._eventComponent);
+
+    switch (mode) {
+      case Mode.DEFAULT:
+        if (oldEventEditComponent && oldEventComponent) {
+          replaceElement(this._eventComponent, oldEventComponent);
+          replaceElement(this._eventEditComponent, oldEventEditComponent);
+        } else {
+          renderElement(this._container, this._eventComponent);
+        }
+        break;
+      case Mode.ADDING:
+        if (oldEventEditComponent && oldEventComponent) {
+          removeElement(oldEventComponent);
+          removeElement(oldEventEditComponent);
+        }
+        document.addEventListener(`keydown`, this._onEscKeyDown);
+        renderElement(this._container, this._eventEditComponent, RenderPosition.AFTEREND);
+        break;
     }
   }
 
@@ -94,3 +109,5 @@ export default class PointController {
     }
   }
 }
+
+export {Mode};

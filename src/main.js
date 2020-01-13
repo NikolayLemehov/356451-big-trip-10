@@ -9,7 +9,7 @@ import EventsModel from "./models/events-model";
 import 'flatpickr/dist/flatpickr.css';
 import TripMainEventAddBtnComponent from "./components/trip-main-event-add-btn-component";
 
-const EVENT_COUNT = 10;
+const EVENT_COUNT = 15;
 const events = generateEvents(EVENT_COUNT);
 
 const tripMainElement = document.querySelector(`.trip-main`);
