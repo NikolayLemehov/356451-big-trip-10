@@ -5,7 +5,7 @@ const castTimeFormat = (value) => {
 };
 
 const formatTime = (date) => {
-  return moment(date).format(`hh:mm`);
+  return moment(date).format(`HH:mm`);
 };
 
 const formatDate = (date) => {

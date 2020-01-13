@@ -1,5 +1,4 @@
-const filterNames = [`everything`, `future`, `past`];
-const filterToChecked = new Map(filterNames.map((name, i) => i === 0 ? [name, true] : [name, false]));
+import {getDate} from "./mock/events";
 
 const menuNames = [`Table`, `Stats`];
 const MONTHS = [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `Jun`, `Jul`, `Aug`, `Sep`, `Oct`, `Nov`, `Dec`];
@@ -9,5 +8,27 @@ const SortType = {
   TIME: `time`,
   PRICE: `price`,
 };
+const FilterType = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`,
+};
+const EmptyEvent = {
+  id: `new`,
+  type: `bus`,
+  city: `Geneva`,
+  photos: [],
+  destination: ``,
+  date: getDate(new Date()),
+  price: ``,
+  offers: [],
+  isFavorite: false,
+  isNewEvent: true,
+};
+const Mode = {
+  DEFAULT: `default`,
+  EDIT: `edit`,
+  ADDING: `adding`,
+};
 
-export {menuNames, MONTHS, filterToChecked, MILLISECONDS_PER_DAY, SortType};
+export {menuNames, MONTHS, MILLISECONDS_PER_DAY, SortType, FilterType, EmptyEvent, Mode};

@@ -8,7 +8,7 @@ const eventTypeTemplate = (type, checkedType) => {
   const isCheckedType = type === checkedType ? `checked` : ``;
   return (
     `<div class="event__type-item">
-      <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" 
+      <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type"
         value="${type}" ${isCheckedType}>
       <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type}</label>
     </div>`
@@ -44,7 +44,7 @@ const createOfferTemplate = (offer, isChecked) => {
 };
 
 const createEditEventTemplate = (event, option) => {
-  const {id, city, photos, destination, date, price, offers, isFavorite} = event;
+  const {id, city, photos, destination, date, price, offers, isFavorite, isNewEvent} = event;
   const {type} = option;
 
   const startDate = `${formatDate(date.start)} ${formatTime(date.start)}`;
@@ -79,7 +79,8 @@ const createEditEventTemplate = (event, option) => {
           <label class="event__label  event__type-output" for="event-destination-1">
             ${id} ${type} ${preposition}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination"
+            value="${city}" list="destination-list-1">
           <datalist id="destination-list-1">
             ${cityOptionsTemplate}
           </datalist>
@@ -89,12 +90,14 @@ const createEditEventTemplate = (event, option) => {
           <label class="visually-hidden" for="event-start-time-1">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startDate}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time"
+            value="${startDate}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endDate}">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time"
+            value="${endDate}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -102,13 +105,17 @@ const createEditEventTemplate = (event, option) => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price"
+            value="${price}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Cancel</button>
 
-        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavoriteAttribute}>
+        <button class="event__reset-btn ${isNewEvent ? `` : `visually-hidden`}" type="reset">Reset</button>
+        <button class="event__reset-btn ${isNewEvent ? `visually-hidden` : ``}" type="button"">Delete</button>
+
+        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite"
+          ${isFavoriteAttribute}>
         <label class="event__favorite-btn" for="event-favorite-1">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -160,10 +167,10 @@ export default class EventEditComponent extends AbstractSmartComponent {
     this._event = event;
     this._type = event.type;
     this._submitHandler = null;
+    this._deleteButtonClickHandler = null;
     this._flatpickr = null;
 
     this._applyFlatpickr();
-    // this._applyFlatpickrEnd();
     this._subscribeOnEvents();
   }
 
@@ -175,6 +182,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
 
   recoveryListeners() {
     this.setSubmitHandler(this._submitHandler);
+    this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
     this._subscribeOnEvents();
   }
 
@@ -182,7 +190,6 @@ export default class EventEditComponent extends AbstractSmartComponent {
     super.rerender();
 
     this._applyFlatpickr();
-    // this._applyFlatpickrEnd();
   }
 
   reset() {
@@ -196,6 +203,25 @@ export default class EventEditComponent extends AbstractSmartComponent {
     this.getElement().addEventListener(`submit`, handler);
     this._submitHandler = handler;
   }
+
+  setDeleteButtonClickHandler(handler) {
+    this.getElement().querySelector(`.event__reset-btn`)
+      .addEventListener(`click`, handler);
+
+    this._deleteButtonClickHandler = handler;
+  }
+
+  getData() {
+    const form = this.getElement();
+    const formData = new FormData(form);
+
+    return parseFormData(formData);
+  }
+
+  setFavoriteToggleHandler(handler) {
+    this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, handler);
+  }
+
 
   _applyFlatpickr() {
     const DateType = {
@@ -223,18 +249,6 @@ export default class EventEditComponent extends AbstractSmartComponent {
       defaultDate: this._event.date[dateType] === null ? new Date() : this._event.date[dateType],
     });
   }
-
-  getData() {
-    const form = this.getElement();
-    const formData = new FormData(form);
-
-    return parseFormData(formData);
-  }
-
-  setFavoriteToggleHandler(handler) {
-    this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, handler);
-  }
-
   _subscribeOnEvents() {
     const element = this.getElement();
 
