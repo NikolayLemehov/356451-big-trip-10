@@ -2,7 +2,7 @@ import EventComponent from "../components/event-component";
 import EventEditComponent from "../components/event-edit-component";
 import {removeElement, renderElement, RenderPosition, replaceElement} from "../utils/render";
 
-const Mode = {
+export const Mode = {
   DEFAULT: `default`,
   EDIT: `edit`,
   ADDING: `adding`,
@@ -109,5 +109,3 @@ export default class PointController {
     }
   }
 }
-
-export {Mode};
