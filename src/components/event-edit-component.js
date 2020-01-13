@@ -8,7 +8,7 @@ const eventTypeTemplate = (type, checkedType) => {
   const isCheckedType = type === checkedType ? `checked` : ``;
   return (
     `<div class="event__type-item">
-      <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" 
+      <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type"
         value="${type}" ${isCheckedType}>
       <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type}</label>
     </div>`
@@ -106,7 +106,7 @@ const createEditEventTemplate = (event, option) => {
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Cancel</button>
+        <button class="event__reset-btn" type="reset">Delete</button>
 
         <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavoriteAttribute}>
         <label class="event__favorite-btn" for="event-favorite-1">
@@ -160,10 +160,10 @@ export default class EventEditComponent extends AbstractSmartComponent {
     this._event = event;
     this._type = event.type;
     this._submitHandler = null;
+    this._deleteButtonClickHandler = null;
     this._flatpickr = null;
 
     this._applyFlatpickr();
-    // this._applyFlatpickrEnd();
     this._subscribeOnEvents();
   }
 
@@ -175,6 +175,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
 
   recoveryListeners() {
     this.setSubmitHandler(this._submitHandler);
+    this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
     this._subscribeOnEvents();
   }
 
@@ -182,7 +183,6 @@ export default class EventEditComponent extends AbstractSmartComponent {
     super.rerender();
 
     this._applyFlatpickr();
-    // this._applyFlatpickrEnd();
   }
 
   reset() {
@@ -195,6 +195,13 @@ export default class EventEditComponent extends AbstractSmartComponent {
   setSubmitHandler(handler) {
     this.getElement().addEventListener(`submit`, handler);
     this._submitHandler = handler;
+  }
+
+  setDeleteButtonClickHandler(handler) {
+    this.getElement().querySelector(`.event__reset-btn`)
+      .addEventListener(`click`, handler);
+
+    this._deleteButtonClickHandler = handler;
   }
 
   _applyFlatpickr() {

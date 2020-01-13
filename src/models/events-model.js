@@ -42,6 +42,10 @@ export default class EventsModel {
     return false;
   }
 
+  removeEvent(id) {
+    return this.updateEvent(id, []);
+  }
+
   getFilters() {
     return Object.values(FilterType).map((filterType) => {
       return {

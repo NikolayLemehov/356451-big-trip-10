@@ -133,9 +133,14 @@ export default class TripController {
   }
 
   _onDataChange(pointController, oldEvent, newEvent) {
-    const isSuccess = this._eventsModel.updateEvent(oldEvent.id, newEvent);
-    if (isSuccess) {
-      pointController.render(newEvent);
+    if (newEvent === null) {
+      this._eventsModel.removeEvent(oldEvent.id);
+      this._updateEvens();
+    } else {
+      const isSuccess = this._eventsModel.updateEvent(oldEvent.id, newEvent);
+      if (isSuccess) {
+        pointController.render(newEvent);
+      }
     }
   }
 
