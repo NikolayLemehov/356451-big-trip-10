@@ -1,6 +1,10 @@
 import {getDate} from "./mock/events";
 
-const menuNames = [`Table`, `Stats`];
+const MenuName = {
+  TABLE: `Table`,
+  STATS: `Stats`,
+};
+const menuNames = Object.values(MenuName);
 const MONTHS = [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `Jun`, `Jul`, `Aug`, `Sep`, `Oct`, `Nov`, `Dec`];
 const MILLISECONDS_PER_DAY = 86400000;
 const SortType = {
@@ -31,4 +35,4 @@ const Mode = {
   ADDING: `adding`,
 };
 
-export {menuNames, MONTHS, MILLISECONDS_PER_DAY, SortType, FilterType, EmptyEvent, Mode};
+export {MenuName, menuNames, MONTHS, MILLISECONDS_PER_DAY, SortType, FilterType, EmptyEvent, Mode};

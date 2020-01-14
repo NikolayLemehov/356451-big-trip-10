@@ -1,16 +1,22 @@
+import SiteMenuTitleComponent from "./components/site-menu-title-component";
 import SiteMenuComponent from "./components/site-menu-component";
 import TripInfoCostComponent from "./components/trip-info-cost-component";
+import TripMainEventAddBtnComponent from "./components/trip-main-event-add-btn-component";
+import TripEventsComponent from "./components/trip-events-component";
+import StatisticsComponent from "./components/statitstics-component";
 import TripController from "./controllers/trip-controller";
 import FilterController from "./controllers/filter-controller";
 import {generateEvents} from "./mock/events";
-import {menuNames} from "./const";
-import {renderElement, RenderPosition} from "./utils/render";
+import {MenuName, menuNames} from "./const";
+import {renderElement} from "./utils/render";
 import EventsModel from "./models/events-model";
 import 'flatpickr/dist/flatpickr.css';
-import TripMainEventAddBtnComponent from "./components/trip-main-event-add-btn-component";
 
 const EVENT_COUNT = 15;
 const events = generateEvents(EVENT_COUNT);
+
+const eventsModel = new EventsModel();
+eventsModel.setEvents(events);
 
 const tripMainElement = document.querySelector(`.trip-main`);
 
@@ -20,21 +26,40 @@ renderElement(tripMainElement, tripMainEventAddBtnComponent);
 const tripInfoElement = tripMainElement.querySelector(`.trip-info`);
 renderElement(tripInfoElement, new TripInfoCostComponent(events));
 
-const titleMenuElement = tripMainElement.querySelector(`.trip-controls h2:nth-of-type(1)`);
-renderElement(titleMenuElement, new SiteMenuComponent(menuNames), RenderPosition.AFTEREND);
+const tripControlsElement = tripMainElement.querySelector(`.trip-controls`);
 
-const eventsModel = new EventsModel();
-eventsModel.setEvents(events);
+const siteMenuTitleComponent = new SiteMenuTitleComponent();
+const siteMenuComponent = new SiteMenuComponent(menuNames);
+renderElement(tripControlsElement, siteMenuTitleComponent);
+renderElement(tripControlsElement, siteMenuComponent);
 
-const titleFilterElement = tripMainElement.querySelector(`.trip-controls h2:nth-of-type(2)`);
-const filterController = new FilterController(titleFilterElement, eventsModel);
+const filterController = new FilterController(tripControlsElement, eventsModel);
 filterController.render();
 
+const pageBodyContainerElement = document.querySelector(`.page-body__page-main .page-body__container`);
+const tripEventsComponent = new TripEventsComponent();
+const statisticsComponent = new StatisticsComponent();
+renderElement(pageBodyContainerElement, tripEventsComponent);
+renderElement(pageBodyContainerElement, statisticsComponent);
 
-const tripEventsElement = document.querySelector(`.trip-events`);
-const tripController = new TripController(tripEventsElement, tripInfoElement, eventsModel);
+const tripController = new TripController(tripEventsComponent, tripInfoElement, eventsModel);
 tripController.render();
+statisticsComponent.hide();
 
 tripMainEventAddBtnComponent.setAddButtonClickHandler(() => {
   tripController.createEvent();
+});
+
+siteMenuComponent.setChangeHandler((menuName) => {
+  switch (menuName) {
+    case MenuName.TABLE:
+      statisticsComponent.hide();
+      tripController.show();
+      filterController.show();
+      break;
+    case MenuName.STATS:
+      tripController.hide();
+      filterController.hide();
+      statisticsComponent.show();
+  }
 });
