@@ -44,10 +44,6 @@ renderElement(pageBodyContainerElement, statisticsComponent);
 
 const tripController = new TripController(tripEventsComponent, tripInfoElement, eventsModel);
 tripController.render();
-
-// tripController.hide();
-// pageBodyContainerElement.classList.add(`disable-line`);
-
 statisticsComponent.hide();
 
 tripMainEventAddBtnComponent.setAddButtonClickHandler(() => {
