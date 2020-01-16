@@ -37,6 +37,22 @@ export default class StatisticsComponent extends AbstractSmartComponent {
     return createStatisticsTemplate();
   }
 
+  show() {
+    super.show();
+
+    this.rerender(this._eventsModel);
+  }
+
+  recoveryListeners() {}
+
+  rerender(eventsModel) {
+    this._eventsModel = eventsModel;
+
+    super.rerender();
+
+    this._renderCharts();
+  }
+
   _renderCharts() {
     const element = this.getElement();
 
