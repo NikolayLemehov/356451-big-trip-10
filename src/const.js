@@ -1,5 +1,6 @@
 import {getDate} from "./mock/events";
 
+const EURO_SYMBOL = `\u20AC`;
 const MenuName = {
   TABLE: `Table`,
   STATS: `Stats`,
@@ -34,5 +35,10 @@ const Mode = {
   EDIT: `edit`,
   ADDING: `adding`,
 };
+const Statistic = {
+  MONEY: `money`,
+  TRANSPORT: `transport`,
+  TIME_SPEND: `time-spend`,
+};
 
-export {MenuName, menuNames, MONTHS, MILLISECONDS_PER_DAY, SortType, FilterType, EmptyEvent, Mode};
+export {EURO_SYMBOL, MenuName, menuNames, MONTHS, MILLISECONDS_PER_DAY, SortType, FilterType, EmptyEvent, Mode, Statistic};

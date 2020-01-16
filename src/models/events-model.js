@@ -13,6 +13,10 @@ export default class EventsModel {
     this._events = Array.from(events);
   }
 
+  getEvents() {
+    return this._events.slice();
+  }
+
   updateEvent(id, event) {
     const index = this._events.findIndex((it) => it.id === id);
 

@@ -38,12 +38,16 @@ filterController.render();
 
 const pageBodyContainerElement = document.querySelector(`.page-body__page-main .page-body__container`);
 const tripEventsComponent = new TripEventsComponent();
-const statisticsComponent = new StatisticsComponent();
+const statisticsComponent = new StatisticsComponent(eventsModel);
 renderElement(pageBodyContainerElement, tripEventsComponent);
 renderElement(pageBodyContainerElement, statisticsComponent);
 
 const tripController = new TripController(tripEventsComponent, tripInfoElement, eventsModel);
 tripController.render();
+
+// tripController.hide();
+// pageBodyContainerElement.classList.add(`disable-line`);
+
 statisticsComponent.hide();
 
 tripMainEventAddBtnComponent.setAddButtonClickHandler(() => {
@@ -54,11 +58,13 @@ siteMenuComponent.setChangeHandler((menuName) => {
   switch (menuName) {
     case MenuName.TABLE:
       statisticsComponent.hide();
+      pageBodyContainerElement.classList.remove(`disable-line`);
       tripController.show();
       filterController.show();
       break;
     case MenuName.STATS:
       tripController.hide();
+      pageBodyContainerElement.classList.add(`disable-line`);
       filterController.hide();
       statisticsComponent.show();
   }
