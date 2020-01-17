@@ -11,8 +11,9 @@ import {formatDate, getExactDate} from "../utils/common";
 import {EmptyEvent, MILLISECONDS_PER_DAY, Mode, SortType} from "../const";
 
 export default class TripController {
-  constructor(container, tripInfoElement, eventsModel) {
-    this._container = container;
+  constructor(containerComponent, tripInfoElement, eventsModel) {
+    this._containerComponent = containerComponent;
+    this._container = containerComponent.getElement();
     this._tripInfoElement = tripInfoElement;
     this._eventsModel = eventsModel;
 
@@ -55,6 +56,14 @@ export default class TripController {
     this._onViewChange();
     this._creatingEventController = new PointController(document.querySelector(`.trip-events__trip-sort`), this._onDataChange, this._onViewChange);
     this._creatingEventController.render(EmptyEvent, Mode.ADDING);
+  }
+
+  hide() {
+    this._containerComponent.hide();
+  }
+
+  show() {
+    this._containerComponent.show();
   }
 
   _onSortTypeChange(sortType) {
