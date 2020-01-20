@@ -2,7 +2,6 @@ export default class EventAdapterModel {
   constructor(endData) {
     this.id = endData[`id`];
     this.type = endData[`type`];
-    this.city = endData[`destination`][`name`];
     this.photos = Array.from(endData[`destination`][`pictures`]).map((it) => it[`src`]);
     this.destination = {
       city: endData[`destination`][`name`],
