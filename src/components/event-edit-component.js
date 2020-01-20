@@ -44,8 +44,8 @@ const createOfferTemplate = (offer) => {
 };
 
 const createEditEventTemplate = (event, destinations, option) => {
-  const {id, date, price, offers, isFavorite, isNewEvent} = event;
-  const {type, destination} = option;
+  const {id, date, price, isFavorite, isNewEvent} = event;
+  const {type, destination, offers} = option;
 
   const startDate = `${formatDate(date.start)} ${formatTime(date.start)}`;
   const endDate = `${formatDate(date.end)} ${formatTime(date.end)}`;
@@ -161,13 +161,15 @@ const parseFormData = (formData) => {
 };
 
 export default class EventEditComponent extends AbstractSmartComponent {
-  constructor(event, destinations) {
+  constructor(event, {destinations, typeToOffers}) {
     super();
     this._event = event;
     this._destinations = destinations;
+    this._typeToOffers = typeToOffers;
 
     this._type = event.type;
     this._destination = event.destination;
+    this._offers = event.offers;
 
     this._submitHandler = null;
     this._deleteButtonClickHandler = null;
@@ -182,6 +184,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
     return createEditEventTemplate(this._event, this._destinations, {
       type: this._type,
       destination: this._destination,
+      offers: this._offers,
     });
   }
 
@@ -206,6 +209,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
 
     this._type = event.type;
     this._destination = event.destination;
+    this._offers = event.offers;
     this.rerender();
   }
 
@@ -274,6 +278,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
       });
       if (radioTypeInputElement) {
         this._type = radioTypeInputElement.value;
+        this._offers = this._typeToOffers.get(this._type);
         this.rerender();
       }
     });

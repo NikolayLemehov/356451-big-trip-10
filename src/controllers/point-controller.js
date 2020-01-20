@@ -18,13 +18,13 @@ export default class PointController {
     this._replaceEditToEvent = this._replaceEditToEvent.bind(this);
   }
 
-  render(event, mode, destinations) {
+  render(event, mode, backEndStaticData) {
     const oldEventComponent = this._eventComponent;
     const oldEventEditComponent = this._eventEditComponent;
     this._mode = mode;
 
     this._eventComponent = new EventComponent(event);
-    this._eventEditComponent = new EventEditComponent(event, destinations);
+    this._eventEditComponent = new EventEditComponent(event, backEndStaticData);
 
     this._eventComponent.setEditButtonClickHandler(() => {
       this._replaceEventToEdit();

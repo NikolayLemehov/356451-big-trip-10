@@ -69,10 +69,12 @@ Promise.all([
   api.getPoints().then((eventAdapterModels) => eventAdapterModels),
 ]).then(([offerAdapterModel, destinationAdapterModel, eventAdapterModels]) => {
   eventsModel.setDestinations(destinationAdapterModel.destinations);
+  eventsModel.setTypeToOffers(offerAdapterModel.typeToOffers);
   eventAdapterModels.forEach((it) => {
     it.replenishOffers(offerAdapterModel.typeToOffers.get(it.type));
   });
   eventsModel.setEvents(eventAdapterModels);
+
   renderElement(tripInfoElement, new TripInfoCostComponent(eventAdapterModels));
   filterController.render();
   tripController.render();

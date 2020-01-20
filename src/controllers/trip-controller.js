@@ -18,7 +18,10 @@ export default class TripController {
     this._eventsModel = eventsModel;
 
     this._pointControllers = [];
-    this._destinations = [];
+    this._backEndStaticData = {
+      destinations: [],
+      typeToOffers: new Map(),
+    };
 
     this._tripSortComponent = new TripSortComponent(this._eventsModel.getSorts());
     this._tripDaysComponent = new TripDaysComponent();
@@ -34,7 +37,8 @@ export default class TripController {
   }
 
   render() {
-    this._destinations = this._eventsModel.getDestinations();
+    this._backEndStaticData.destinations = this._eventsModel.getDestinations();
+    this._backEndStaticData.typeToOffers = this._eventsModel.getTypeToOffers();
     const events = this._eventsModel.getEventsByFilter();
     if (events.length === 0) {
       renderElement(this._container, new EmptyComponent());
@@ -57,7 +61,7 @@ export default class TripController {
 
     this._onViewChange();
     this._creatingEventController = new PointController(document.querySelector(`.trip-events__trip-sort`), this._onDataChange, this._onViewChange);
-    this._creatingEventController.render(EmptyEvent, Mode.ADDING, this._destinations);
+    this._creatingEventController.render(EmptyEvent, Mode.ADDING, this._backEndStaticData);
   }
 
   hide() {
@@ -137,7 +141,7 @@ export default class TripController {
   _renderOneDayEvents(container, events) {
     return events.map((event) => {
       const pointController = new PointController(container, this._onDataChange, this._onViewChange);
-      pointController.render(event, Mode.DEFAULT, this._destinations);
+      pointController.render(event, Mode.DEFAULT, this._backEndStaticData);
       return pointController;
     });
   }
@@ -160,7 +164,7 @@ export default class TripController {
         pointController.destroy();
       } else {
         this._eventsModel.addEvent(newEvent);
-        pointController.render(newEvent, Mode.DEFAULT, this._destinations);
+        pointController.render(newEvent, Mode.DEFAULT, this._backEndStaticData);
 
         const destroyedPointController = this._pointControllers.pop();
         destroyedPointController.destroy();
@@ -174,7 +178,7 @@ export default class TripController {
     } else {
       const isSuccess = this._eventsModel.updateEvent(oldEvent.id, newEvent);
       if (isSuccess) {
-        pointController.render(newEvent, Mode.DEFAULT, this._destinations);
+        pointController.render(newEvent, Mode.DEFAULT, this._backEndStaticData);
       }
     }
   }

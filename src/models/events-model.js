@@ -7,6 +7,7 @@ export default class EventsModel {
     this._activeSortType = SortType.EVENT;
 
     this._destinations = [];
+    this._typeToOffers = new Map();
     this._filterChangeHandlers = [];
   }
 
@@ -93,6 +94,14 @@ export default class EventsModel {
 
   setDestinations(destinations) {
     this._destinations = destinations;
+  }
+
+  getTypeToOffers() {
+    return this._typeToOffers;
+  }
+
+  setTypeToOffers(typeToOffers) {
+    this._typeToOffers = typeToOffers;
   }
 
   _callHandlers(handlers) {
