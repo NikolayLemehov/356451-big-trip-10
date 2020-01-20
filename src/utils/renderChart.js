@@ -1,7 +1,6 @@
 import Chart from "chart.js";
 import moment from "moment";
-import {GroupType, typeToGroup} from "../mock/events";
-import {EURO_SYMBOL, Statistic} from "../const";
+import {EURO_SYMBOL, GroupType, Statistic, typeToGroup} from "../const";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
 class DefaultChartConfig {

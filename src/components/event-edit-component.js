@@ -1,6 +1,6 @@
 import flatpickr from 'flatpickr';
 import {formatDate, formatTime} from "../utils/common";
-import {groupToTypes, groupTypeToPreposition, typeToGroup} from "../mock/events";
+import {groupToTypes, groupTypeToPreposition, typeToGroup} from "../const";
 import AbstractSmartComponent from "./abstract-smart-component";
 
 const FLATPICKR_DATE_FORMAT = `d/m/y H:i`;

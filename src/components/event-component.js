@@ -1,6 +1,6 @@
 import {formatTime, getDuration} from "../utils/common";
 import AbstractComponent from "./abstract-component";
-import {groupTypeToPreposition, typeToGroup} from "../mock/events";
+import {groupTypeToPreposition, typeToGroup} from "../const";
 
 const createOffersTemplate = (offers) => offers.filter((it) => it.isChecked === true)
   .map((offer) => {
