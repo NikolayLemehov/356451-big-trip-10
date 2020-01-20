@@ -29,11 +29,13 @@ const getDate = (date) => {
 const EmptyEvent = {
   id: `new`,
   type: `bus`,
-  city: `Geneva`,
-  photos: [],
-  destination: ``,
+  destination: {
+    city: ``,
+    description: ``,
+    photos: [],
+  },
   date: getDate(new Date()),
-  price: ``,
+  price: null,
   offers: [],
   isFavorite: false,
   isNewEvent: true,
