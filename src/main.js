@@ -63,10 +63,18 @@ siteMenuComponent.setChangeHandler((menuName) => {
   }
 });
 
-api.getPoints()
-  .then((eventAdapterModels) => {
-    eventsModel.setEvents(eventAdapterModels);
-    renderElement(tripInfoElement, new TripInfoCostComponent(eventAdapterModels));
-    filterController.render();
-    tripController.render();
+Promise.all([
+  api.getOffers().then((offerAdapterModel) => offerAdapterModel),
+  api.getDestinations().then((destinationAdapterModel) => destinationAdapterModel),
+  api.getPoints().then((eventAdapterModels) => eventAdapterModels),
+]).then(([offerAdapterModel, destinationAdapterModel, eventAdapterModels]) => {
+  eventsModel.setDestinations(destinationAdapterModel.endData);
+  eventAdapterModels.forEach((it) => {
+    it.replenishOffers(offerAdapterModel.typeToOffers.get(it.type));
   });
+  eventsModel.setEvents(eventAdapterModels);
+  renderElement(tripInfoElement, new TripInfoCostComponent(eventAdapterModels));
+  filterController.render();
+  tripController.render();
+});
+

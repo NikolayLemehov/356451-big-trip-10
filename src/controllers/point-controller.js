@@ -18,17 +18,22 @@ export default class PointController {
     this._replaceEditToEvent = this._replaceEditToEvent.bind(this);
   }
 
-  render(event, mode) {
+  render(event, mode, destinations) {
     const oldEventComponent = this._eventComponent;
     const oldEventEditComponent = this._eventEditComponent;
     this._mode = mode;
 
     this._eventComponent = new EventComponent(event);
-    this._eventEditComponent = new EventEditComponent(event);
+    this._eventEditComponent = new EventEditComponent(event, destinations);
 
     this._eventComponent.setEditButtonClickHandler(() => {
       this._replaceEventToEdit();
       document.addEventListener(`keydown`, this._onEscKeyDown);
+    });
+
+    this._eventEditComponent.setRollupButtonClickHandler(() => {
+      this._replaceEditToEvent();
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
     });
 
     this._eventEditComponent.setFavoriteToggleHandler(() => {

@@ -1,5 +1,3 @@
-import {getDate} from "./mock/events";
-
 const EURO_SYMBOL = `\u20AC`;
 const MenuName = {
   TABLE: `Table`,
@@ -17,6 +15,17 @@ const FilterType = {
   EVERYTHING: `everything`,
   FUTURE: `future`,
   PAST: `past`,
+};
+const getRandomIntegerNumber = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));
+const TimePeriodInMinute = {
+  MIN: 10,
+  MAX: 60 * 12,
+};
+const getDate = (date) => {
+  return {
+    start: new Date(date.setMinutes(date.getMinutes() + getRandomIntegerNumber(TimePeriodInMinute.MIN, TimePeriodInMinute.MAX))),
+    end: new Date(date.setMinutes(date.getMinutes() + getRandomIntegerNumber(TimePeriodInMinute.MIN, TimePeriodInMinute.MAX))),
+  };
 };
 const EmptyEvent = {
   id: `new`,

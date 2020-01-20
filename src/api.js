@@ -1,4 +1,6 @@
 import EventAdapterModel from "./models/event-adapter-model";
+import DestinationAdapterModel from "./models/destination-adapter-model";
+import OffersAdapterModel from "./models/offer-adapter-model";
 
 const Method = {
   GET: `GET`,
@@ -25,6 +27,18 @@ export default class API {
     return this._load({url: `points`})
       .then((response) => response.json())
       .then(EventAdapterModel.parseEvents);
+  }
+
+  getDestinations() {
+    return this._load({url: `destinations`})
+      .then((response) => response.json())
+      .then(DestinationAdapterModel.parseDestination);
+  }
+
+  getOffers() {
+    return this._load({url: `offers`})
+      .then((response) => response.json())
+      .then(OffersAdapterModel.parseOffers);
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {

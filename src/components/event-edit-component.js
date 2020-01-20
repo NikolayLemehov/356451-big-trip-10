@@ -1,6 +1,6 @@
 import flatpickr from 'flatpickr';
 import {formatDate, formatTime} from "../utils/common";
-import {cities, groupToTypes, groupTypeToPreposition, offerNames, offersStructure, typeToGroup} from "../mock/events";
+import {groupToTypes, groupTypeToPreposition, typeToGroup} from "../mock/events";
 import AbstractSmartComponent from "./abstract-smart-component";
 
 const FLATPICKR_DATE_FORMAT = `d/m/y H:i`;
@@ -24,17 +24,17 @@ const createEventTypeGroupTemplate = (group, checkedType) => {
   );
 };
 
-const createOfferTemplate = (offer, isChecked) => {
-  const {name, title, price} = offer;
+const createOfferTemplate = (offer) => {
+  const {name, title, price, isChecked} = offer;
   return (
     `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden"
-        id="event-offer-${name}-1"
+        id="event-offer-${name}"
         type="checkbox"
         name="event-offer-${name}"
         ${isChecked ? `checked` : ``}
       >
-      <label class="event__offer-label" for="event-offer-${name}-1">
+      <label class="event__offer-label" for="event-offer-${name}">
         <span class="event__offer-title">${title}</span>
         &plus;
         &euro;&nbsp;<span class="event__offer-price">${price}</span>
@@ -43,8 +43,8 @@ const createOfferTemplate = (offer, isChecked) => {
   );
 };
 
-const createEditEventTemplate = (event, option) => {
-  const {id, city, photos, destination, date, price, offers, isFavorite, isNewEvent} = event;
+const createEditEventTemplate = (event, destinations, option) => {
+  const {id, destination, date, price, offers, isFavorite, isNewEvent} = event;
   const {type} = option;
 
   const startDate = `${formatDate(date.start)} ${formatTime(date.start)}`;
@@ -52,13 +52,14 @@ const createEditEventTemplate = (event, option) => {
   const preposition = groupTypeToPreposition.get(typeToGroup.get(type));
   const isFavoriteAttribute = isFavorite ? `checked` : ``;
 
-  const getIsChecked = (name) => offers.find((offer) => offer.name === name);
-  const offersMarkUp = offerNames.map((it) => createOfferTemplate(offersStructure[it], getIsChecked(it))).join(``);
+  const offersMarkUp = offers.length > 0 ? offers.slice()
+    .sort((a, b) => a.id - b.id).map((it) => createOfferTemplate(it)).join(``) : ``;
 
   const eventTypeGroupsTemplate = Array.from(groupToTypes.keys()).map((it) => createEventTypeGroupTemplate(it, type)).join(``);
 
-  const photoElementsTemplate = photos.map((url) => `<img class="event__photo" src="${url}" alt="Event photo">`).join(``);
-  const cityOptionsTemplate = cities.map((it) => `<option value="${it}"></option>`).join(``);
+  const photoElementsTemplate = destination.photos
+    .map((it) => `<img class="event__photo" src="${it.src}" alt="${it.description}">`).join(``);
+  const cityOptionsTemplate = destinations.map((it) => `<option value="${it.name}"></option>`).join(``);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -80,7 +81,7 @@ const createEditEventTemplate = (event, option) => {
             ${id} ${type} ${preposition}
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination"
-            value="${city}" list="destination-list-1">
+            value="${destination.city}" list="destination-list-1">
           <datalist id="destination-list-1">
             ${cityOptionsTemplate}
           </datalist>
@@ -129,17 +130,17 @@ const createEditEventTemplate = (event, option) => {
       </header>
       <section class="event__details">
 
+        ${offers.length > 0 ? (`
         <section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
           <div class="event__available-offers">
             ${offersMarkUp}
           </div>
-        </section>
+        </section>`) : ``}
 
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${destination}</p>
+          <p class="event__destination-description">${destination.description}</p>
 
           <div class="event__photos-container">
             <div class="event__photos-tape">
@@ -162,12 +163,14 @@ const parseFormData = (formData) => {
 };
 
 export default class EventEditComponent extends AbstractSmartComponent {
-  constructor(event) {
+  constructor(event, destinations) {
     super();
     this._event = event;
+    this._destinations = destinations;
     this._type = event.type;
     this._submitHandler = null;
     this._deleteButtonClickHandler = null;
+    this._rollupButtonClickHandler = null;
     this._flatpickr = null;
 
     this._applyFlatpickr();
@@ -175,7 +178,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createEditEventTemplate(this._event, {
+    return createEditEventTemplate(this._event, this._destinations, {
       type: this._type,
     });
   }
@@ -183,6 +186,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
   recoveryListeners() {
     this.setSubmitHandler(this._submitHandler);
     this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
+    this.setRollupButtonClickHandler(this._rollupButtonClickHandler);
     this._subscribeOnEvents();
   }
 
@@ -220,6 +224,11 @@ export default class EventEditComponent extends AbstractSmartComponent {
 
   setFavoriteToggleHandler(handler) {
     this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, handler);
+  }
+
+  setRollupButtonClickHandler(handler) {
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
+    this._rollupButtonClickHandler = handler;
   }
 
 

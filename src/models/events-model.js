@@ -6,6 +6,7 @@ export default class EventsModel {
     this._activeFilterType = FilterType.EVERYTHING;
     this._activeSortType = SortType.EVENT;
 
+    this._destinations = [];
     this._filterChangeHandlers = [];
   }
 
@@ -84,6 +85,14 @@ export default class EventsModel {
 
   setSortType(sortType) {
     this._activeSortType = sortType;
+  }
+
+  getDestinations() {
+    return this._destinations.slice();
+  }
+
+  setDestinations(destinations) {
+    this._destinations = destinations;
   }
 
   _callHandlers(handlers) {
