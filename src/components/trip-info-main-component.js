@@ -1,5 +1,5 @@
-import {MONTHS} from "../const";
 import AbstractComponent from "./abstract-component";
+import moment from "moment";
 
 const getPeriod = (events) => {
   const startDate = new Date(events[0].date.start);
@@ -7,13 +7,13 @@ const getPeriod = (events) => {
 
   if (startDate.getMonth() === endDate.getMonth()) {
     return {
-      start: `${MONTHS[startDate.getMonth()]} ${startDate.getDate()}`,
+      start: `${moment(startDate).format(`MMM`)} ${startDate.getDate()}`,
       end: `${endDate.getDate()}`,
     };
   } else {
     return {
-      start: `${startDate.getDate()} ${MONTHS[startDate.getMonth()]}`,
-      end: `${endDate.getDate()} ${MONTHS[endDate.getMonth()]}`,
+      start: `${startDate.getDate()} ${moment(startDate).format(`MMM`)}`,
+      end: `${endDate.getDate()} ${moment(endDate).format(`MMM`)}`,
     };
   }
 };

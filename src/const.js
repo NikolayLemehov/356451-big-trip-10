@@ -4,7 +4,6 @@ const MenuName = {
   STATS: `Stats`,
 };
 const menuNames = Object.values(MenuName);
-const MONTHS = [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `Jun`, `Jul`, `Aug`, `Sep`, `Oct`, `Nov`, `Dec`];
 const MILLISECONDS_PER_DAY = 86400000;
 const SortType = {
   EVENT: `event`,
@@ -50,4 +49,4 @@ const Statistic = {
   TIME_SPEND: `time-spend`,
 };
 
-export {EURO_SYMBOL, MenuName, menuNames, MONTHS, MILLISECONDS_PER_DAY, SortType, FilterType, EmptyEvent, Mode, Statistic};
+export {EURO_SYMBOL, MenuName, menuNames, MILLISECONDS_PER_DAY, SortType, FilterType, EmptyEvent, Mode, Statistic};
