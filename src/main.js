@@ -68,7 +68,7 @@ Promise.all([
   api.getDestinations().then((destinationAdapterModel) => destinationAdapterModel),
   api.getPoints().then((eventAdapterModels) => eventAdapterModels),
 ]).then(([offerAdapterModel, destinationAdapterModel, eventAdapterModels]) => {
-  eventsModel.setDestinations(destinationAdapterModel.endData);
+  eventsModel.setDestinations(destinationAdapterModel.destinations);
   eventAdapterModels.forEach((it) => {
     it.replenishOffers(offerAdapterModel.typeToOffers.get(it.type));
   });
