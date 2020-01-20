@@ -44,8 +44,8 @@ const createOfferTemplate = (offer) => {
 };
 
 const createEditEventTemplate = (event, destinations, option) => {
-  const {id, destination, date, price, offers, isFavorite, isNewEvent} = event;
-  const {type} = option;
+  const {id, date, price, offers, isFavorite, isNewEvent} = event;
+  const {type, destination} = option;
 
   const startDate = `${formatDate(date.start)} ${formatTime(date.start)}`;
   const endDate = `${formatDate(date.end)} ${formatTime(date.end)}`;
@@ -57,7 +57,7 @@ const createEditEventTemplate = (event, destinations, option) => {
 
   const photoElementsTemplate = destination.photos
     .map((it) => `<img class="event__photo" src="${it.src}" alt="${it.description}">`).join(``);
-  const cityOptionsTemplate = destinations.map((it) => `<option value="${it.name}"></option>`).join(``);
+  const cityOptionsTemplate = destinations.map((it) => `<option value="${it.city}"></option>`).join(``);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -165,7 +165,10 @@ export default class EventEditComponent extends AbstractSmartComponent {
     super();
     this._event = event;
     this._destinations = destinations;
+
     this._type = event.type;
+    this._destination = event.destination;
+
     this._submitHandler = null;
     this._deleteButtonClickHandler = null;
     this._rollupButtonClickHandler = null;
@@ -178,6 +181,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
   getTemplate() {
     return createEditEventTemplate(this._event, this._destinations, {
       type: this._type,
+      destination: this._destination,
     });
   }
 
@@ -188,16 +192,20 @@ export default class EventEditComponent extends AbstractSmartComponent {
     this._subscribeOnEvents();
   }
 
-  rerender() {
+  rerender(onFocusElement) {
     super.rerender();
 
     this._applyFlatpickr();
+    if (onFocusElement) {
+      onFocusElement();
+    }
   }
 
   reset() {
     const event = this._event;
 
     this._type = event.type;
+    this._destination = event.destination;
     this.rerender();
   }
 
@@ -256,6 +264,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
       defaultDate: this._event.date[dateType] === null ? new Date() : this._event.date[dateType],
     });
   }
+
   _subscribeOnEvents() {
     const element = this.getElement();
 
@@ -266,6 +275,20 @@ export default class EventEditComponent extends AbstractSmartComponent {
       if (radioTypeInputElement) {
         this._type = radioTypeInputElement.value;
         this.rerender();
+      }
+    });
+
+    element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
+      const destination = this._destinations.find((it) => it.city === evt.target.value);
+      if (destination) {
+        this._destination = destination;
+        this.rerender(() => {
+          const newElement = this.getElement().querySelector(`.event__input--destination`);
+          newElement.focus();
+          newElement.selectionStart = newElement.value.length;
+        });
+      } else {
+        element.querySelector(`.event__section--destination`).remove();
       }
     });
   }
