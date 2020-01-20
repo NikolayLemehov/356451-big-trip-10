@@ -12,6 +12,5 @@ const groupToTypes = new Map([
 ]);
 const typeToGroup = new Map();
 groupToTypes.forEach((value, key) => value.forEach((type) => typeToGroup.set(type, key)));
-const cities = [`Geneva`, `Copenhagen`, `Amsterdam`, `Lisbon`, `Riga`, `Helsinki`, `Dresden`];
 
-export {GroupType, groupToTypes, groupTypeToPreposition, typeToGroup, cities};
+export {GroupType, groupToTypes, groupTypeToPreposition, typeToGroup};

@@ -50,11 +50,9 @@ const createEditEventTemplate = (event, destinations, option) => {
   const startDate = `${formatDate(date.start)} ${formatTime(date.start)}`;
   const endDate = `${formatDate(date.end)} ${formatTime(date.end)}`;
   const preposition = groupTypeToPreposition.get(typeToGroup.get(type));
-  const isFavoriteAttribute = isFavorite ? `checked` : ``;
 
   const offersMarkUp = offers.length > 0 ? offers.slice()
     .sort((a, b) => a.id - b.id).map((it) => createOfferTemplate(it)).join(``) : ``;
-
   const eventTypeGroupsTemplate = Array.from(groupToTypes.keys()).map((it) => createEventTypeGroupTemplate(it, type)).join(``);
 
   const photoElementsTemplate = destination.photos
@@ -116,7 +114,7 @@ const createEditEventTemplate = (event, destinations, option) => {
         <button class="event__reset-btn ${isNewEvent ? `visually-hidden` : ``}" type="button"">Delete</button>
 
         <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite"
-          ${isFavoriteAttribute}>
+          ${isFavorite ? `checked` : ``}>
         <label class="event__favorite-btn" for="event-favorite-1">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -130,13 +128,13 @@ const createEditEventTemplate = (event, destinations, option) => {
       </header>
       <section class="event__details">
 
-        ${offers.length > 0 ? (`
+        ${offers.length > 0 ? `
         <section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
           <div class="event__available-offers">
             ${offersMarkUp}
           </div>
-        </section>`) : ``}
+        </section>` : ``}
 
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
