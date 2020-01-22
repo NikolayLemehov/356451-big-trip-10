@@ -29,6 +29,17 @@ export default class API {
       .then(EventAdapterModel.parseEvents);
   }
 
+  updatePoint(id, eventAdapterModel) {
+    return this._load({
+      url: `points/${id}`,
+      method: Method.PUT,
+      body: JSON.stringify(eventAdapterModel.getRAW()),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then((response) => response.json())
+      .then(EventAdapterModel.parseEvent);
+  }
+
   getDestinations() {
     return this._load({url: `destinations`})
       .then((response) => response.json())

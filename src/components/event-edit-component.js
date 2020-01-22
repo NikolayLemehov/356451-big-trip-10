@@ -29,12 +29,12 @@ const createOfferTemplate = (offer) => {
   return (
     `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden"
-        id="event-offer-${name}"
+        id="${name}"
         type="checkbox"
-        name="event-offer-${name}"
+        name="${name}"
         ${isChecked ? `checked` : ``}
       >
-      <label class="event__offer-label" for="event-offer-${name}">
+      <label class="event__offer-label" for="${name}">
         <span class="event__offer-title">${title}</span>
         &plus;
         &euro;&nbsp;<span class="event__offer-price">${price}</span>
@@ -51,8 +51,7 @@ const createEditEventTemplate = (event, destinations, option) => {
   const endDate = `${formatDate(date.end)} ${formatTime(date.end)}`;
   const preposition = groupTypeToPreposition.get(typeToGroup.get(type));
 
-  const offersMarkUp = offers.length > 0 ? offers.slice()
-    .sort((a, b) => a.id - b.id).map((it) => createOfferTemplate(it)).join(``) : ``;
+  const offersMarkUp = offers.length > 0 ? offers.map((it) => createOfferTemplate(it)).join(``) : ``;
   const eventTypeGroupsTemplate = Array.from(groupToTypes.keys()).map((it) => createEventTypeGroupTemplate(it, type)).join(``);
 
   const photoElementsTemplate = destination.photos
@@ -151,15 +150,6 @@ const createEditEventTemplate = (event, destinations, option) => {
   );
 };
 
-const parseFormData = (formData) => {
-  return {
-    type: formData.get(`event-type`),
-    city: formData.get(`event-destination`),
-    price: formData.get(`event-price`),
-    isFavorite: formData.get(`event-favorite`),
-  };
-};
-
 export default class EventEditComponent extends AbstractSmartComponent {
   constructor(event, {destinations, typeToOffers}) {
     super();
@@ -227,9 +217,12 @@ export default class EventEditComponent extends AbstractSmartComponent {
 
   getData() {
     const form = this.getElement();
-    const formData = new FormData(form);
-
-    return parseFormData(formData);
+    return {
+      formData: new FormData(form),
+      destination: this._destination,
+      offers: this._offers,
+      typeToOffers: this._typeToOffers,
+    };
   }
 
   setFavoriteToggleHandler(handler) {
@@ -281,6 +274,12 @@ export default class EventEditComponent extends AbstractSmartComponent {
         this._offers = this._typeToOffers.get(this._type);
         this.rerender();
       }
+    });
+
+    element.querySelectorAll(`.event__offer-checkbox`).forEach((checkboxElement, i) => {
+      checkboxElement.addEventListener(`change`, () => {
+        this._offers[i].isChecked = !this._offers[i].isChecked;
+      });
     });
 
     element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {

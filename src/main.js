@@ -10,10 +10,11 @@ import FilterController from "./controllers/filter-controller";
 import {MenuName, menuNames} from "./const";
 import {renderElement} from "./utils/render";
 import EventsModel from "./models/events-model";
+import EventAdapterModel from "./models/event-adapter-model";
 import 'flatpickr/dist/flatpickr.css';
 
 const AUTHORIZATION = `Basic 6PZAz5uh8iB4RIAL336X`;
-const END_POINT = `https://htmlacademy-es-10.appspot.com/big-trip/`;
+const END_POINT = `https://htmlacademy-es-10.appspot.com/big-trip`;
 const api = new API(END_POINT, AUTHORIZATION);
 
 const eventsModel = new EventsModel();
@@ -40,7 +41,7 @@ const statisticsComponent = new StatisticsComponent(eventsModel);
 renderElement(pageBodyContainerElement, tripEventsComponent);
 renderElement(pageBodyContainerElement, statisticsComponent);
 
-const tripController = new TripController(tripEventsComponent, tripInfoElement, eventsModel);
+const tripController = new TripController(tripEventsComponent, tripInfoElement, eventsModel, api);
 statisticsComponent.hide();
 
 tripMainEventAddBtnComponent.setAddButtonClickHandler(() => {
@@ -71,7 +72,7 @@ Promise.all([
   eventsModel.setDestinations(destinationAdapterModel.destinations);
   eventsModel.setTypeToOffers(offerAdapterModel.typeToOffers);
   eventAdapterModels.forEach((it) => {
-    it.replenishOffers(offerAdapterModel.typeToOffers.get(it.type));
+    EventAdapterModel.replenishOffers(offerAdapterModel.typeToOffers.get(it.type), it);
   });
   eventsModel.setEvents(eventAdapterModels);
 
@@ -79,4 +80,3 @@ Promise.all([
   filterController.render();
   tripController.render();
 });
-
