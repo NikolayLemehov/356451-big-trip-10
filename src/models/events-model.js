@@ -31,11 +31,15 @@ export default class EventsModel {
     return true;
   }
 
+  getSortingDateEvents() {
+    return this._eventAdapterModels.slice().sort((a, b) => a.date.start - b.date.start);
+  }
+
   getEventsByFilter() {
     const nowDate = new Date();
     switch (this._activeFilterType) {
       case FilterType.EVERYTHING:
-        return this._eventAdapterModels.slice().sort((a, b) => a.date.start - b.date.start);
+        return this.getSortingDateEvents();
       case FilterType.FUTURE:
         return this._eventAdapterModels.filter((it) => it.date.start > nowDate);
       case FilterType.PAST:

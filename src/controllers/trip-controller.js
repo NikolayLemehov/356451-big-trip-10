@@ -1,5 +1,6 @@
 import EmptyComponent from "../components/empty-component";
 import TripInfoMainComponent from "../components/trip-info-main-component";
+import TripInfoCostComponent from "../components/trip-info-cost-component";
 import TripDaysComponent from "../components/trip-days-component";
 import TripEventsListComponent from "../components/trip-events-list-component";
 import TripSortComponent from "../components/trip-sort-component";
@@ -24,6 +25,8 @@ export default class TripController {
       destinations: [],
       typeToOffers: new Map(),
     };
+    this._tripInfoMainComponent = null;
+    this._tripInfoCostComponent = null;
 
     this._tripSortComponent = new TripSortComponent(this._eventsModel.getSorts());
     this._tripDaysComponent = new TripDaysComponent();
@@ -41,6 +44,7 @@ export default class TripController {
   render() {
     this._backEndStaticData.destinations = this._eventsModel.getDestinations();
     this._backEndStaticData.typeToOffers = this._eventsModel.getTypeToOffers();
+
     const eventAdapterModels = this._eventsModel.getEventsByFilter();
     if (eventAdapterModels.length === 0) {
       renderElement(this._container, new EmptyComponent());
@@ -50,8 +54,10 @@ export default class TripController {
     renderElement(this._container, this._tripSortComponent);
     renderElement(this._container, this._tripDaysComponent);
 
-
-    renderElement(this._tripInfoElement, new TripInfoMainComponent(eventAdapterModels), RenderPosition.AFTERBEGIN);
+    this._tripInfoMainComponent = new TripInfoMainComponent(this._eventsModel.getSortingDateEvents());
+    this._tripInfoCostComponent = new TripInfoCostComponent(this._eventsModel.getSortingDateEvents());
+    renderElement(this._tripInfoElement, this._tripInfoMainComponent, RenderPosition.AFTERBEGIN);
+    renderElement(this._tripInfoElement, this._tripInfoCostComponent);
 
     this._renderEvents();
   }
@@ -158,6 +164,8 @@ export default class TripController {
   _updateEvents() {
     this._removeTripControllers();
     this._renderEvents();
+    this._tripInfoMainComponent.rerender(this._eventsModel.getSortingDateEvents());
+    this._tripInfoCostComponent.rerender(this._eventsModel.getSortingDateEvents());
   }
 
   _onDataChange(pointController, oldEvent, newEventAdapterModel) {
@@ -166,18 +174,25 @@ export default class TripController {
       if (newEventAdapterModel === null) {
         pointController.destroy();
       } else {
-        this._eventsModel.addEvent(newEventAdapterModel);
-        pointController.render(newEventAdapterModel, Mode.DEFAULT, this._backEndStaticData);
+        this._api.createPoint(newEventAdapterModel)
+          .then((eventAdapterModel) => {
+            this._eventsModel.addEvent(eventAdapterModel);
+            pointController.render(eventAdapterModel, Mode.DEFAULT, this._backEndStaticData);
 
-        const destroyedPointController = this._pointControllers.pop();
-        destroyedPointController.destroy();
+            const destroyedPointController = this._pointControllers.pop();
+            destroyedPointController.destroy();
 
-        this._pointControllers = [].concat(this._pointControllers, pointController);
+            this._pointControllers = [].concat(this._pointControllers, pointController);
+            this._updateEvents();
+          });
       }
       this._updateEvents();
     } else if (newEventAdapterModel === null) {
-      this._eventsModel.removeEvent(oldEvent.id);
-      this._updateEvents();
+      this._api.deletePoint(oldEvent.id)
+        .then(() => {
+          this._eventsModel.removeEvent(oldEvent.id);
+          this._updateEvents();
+        });
     } else {
       this._api.updatePoint(oldEvent.id, newEventAdapterModel)
         .then((eventAdapterModel) => {

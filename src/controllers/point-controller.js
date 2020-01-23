@@ -3,7 +3,7 @@ import EventComponent from "../components/event-component";
 import EventEditComponent from "../components/event-edit-component";
 import EventAdapterModel from "../models/event-adapter-model";
 import {removeElement, renderElement, RenderPosition, replaceElement} from "../utils/render";
-import {Mode} from "../const";
+import {EmptyEvent, Mode} from "../const";
 
 export default class PointController {
   constructor(container, onDataChange, onViewChange) {
@@ -34,7 +34,11 @@ export default class PointController {
     });
 
     this._eventEditComponent.setRollupButtonClickHandler(() => {
-      this._replaceEditToEvent();
+      if (this._mode === Mode.ADDING) {
+        this._onDataChange(this, EmptyEvent, null);
+      } else {
+        this._replaceEditToEvent();
+      }
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     });
 
@@ -47,11 +51,14 @@ export default class PointController {
     this._eventEditComponent.setSubmitHandler((evt) => {
       evt.preventDefault();
       const componentData = this._eventEditComponent.getData();
+      this._eventEditComponent.disableSave();
       const newEventAdapterModel = this._parseFormData(componentData, eventAdapterModel);
       this._onDataChange(this, eventAdapterModel, newEventAdapterModel);
     });
+
     this._eventEditComponent.setDeleteButtonClickHandler((evt) => {
       evt.preventDefault();
+      this._eventEditComponent.disableDelete();
       this._onDataChange(this, eventAdapterModel, null);
     });
 
@@ -133,6 +140,9 @@ export default class PointController {
     const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
 
     if (isEscKey) {
+      if (this._mode === Mode.ADDING) {
+        this._onDataChange(this, EmptyEvent, null);
+      }
       this._replaceEditToEvent();
     }
   }

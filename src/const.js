@@ -27,15 +27,15 @@ const getDate = (date) => {
   };
 };
 const EmptyEvent = {
-  id: `new`,
-  type: `bus`,
+  id: ``,
+  type: `trip`,
   destination: {
     city: ``,
     description: ``,
     photos: [],
   },
   date: getDate(new Date()),
-  price: null,
+  price: ``,
   offers: [],
   isFavorite: false,
   isNewEvent: true,
