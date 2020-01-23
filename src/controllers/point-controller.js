@@ -5,6 +5,8 @@ import EventAdapterModel from "../models/event-adapter-model";
 import {removeElement, renderElement, RenderPosition, replaceElement} from "../utils/render";
 import {EmptyEvent, Mode} from "../const";
 
+const SHAKE_ANIMATION_TIMEOUT = 600;
+
 export default class PointController {
   constructor(container, onDataChange, onViewChange) {
     this._container = container;
@@ -87,6 +89,23 @@ export default class PointController {
     removeElement(this._eventEditComponent);
     removeElement(this._eventComponent);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
+  }
+
+  shake() {
+    const removeAnimation = () => {
+      this._eventEditComponent.getElement().classList.remove(`shake`);
+      this._eventEditComponent.deactivateWarningFrame();
+    };
+    const animate = () => {
+      this._eventEditComponent.activeSave();
+      this._eventEditComponent.activeDelete();
+
+      this._eventEditComponent.activateWarningFrame();
+
+      this._eventEditComponent.getElement().classList.add(`shake`);
+      setTimeout(removeAnimation, SHAKE_ANIMATION_TIMEOUT);
+    };
+    setTimeout(animate, SHAKE_ANIMATION_TIMEOUT);
   }
 
   setDefaultView() {

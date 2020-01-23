@@ -261,6 +261,14 @@ export default class EventEditComponent extends AbstractSmartComponent {
     this._deleteBtnElement.textContent = `Delete`;
   }
 
+  activateWarningFrame() {
+    this.getElement().style.outline = `10px solid red`;
+  }
+
+  deactivateWarningFrame() {
+    this.getElement().style.outline = ``;
+  }
+
 
   _applyFlatpickr() {
     const DateType = {
