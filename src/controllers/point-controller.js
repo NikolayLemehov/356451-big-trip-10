@@ -45,9 +45,10 @@ export default class PointController {
     });
 
     this._eventEditComponent.setFavoriteToggleHandler(() => {
-      this._onDataChange(this, eventAdapterModel, Object.assign({}, eventAdapterModel, {
-        isFavorite: !eventAdapterModel.isFavorite,
-      }));
+      this._eventEditComponent.disableFavorite();
+      const newEventAdapterModel = EventAdapterModel.clone(eventAdapterModel);
+      newEventAdapterModel.isFavorite = !newEventAdapterModel.isFavorite;
+      this._onDataChange(this, eventAdapterModel, newEventAdapterModel);
     });
 
     this._eventEditComponent.setSubmitHandler((evt) => {

@@ -168,6 +168,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
 
     this._saveBtnElement = this.getElement().querySelector(`.event__save-btn`);
     this._deleteBtnElement = this.getElement().querySelector(`.event__reset-btn--delete`);
+    this._favoriteBtnElement = this.getElement().querySelector(`.event__favorite-checkbox`);
     this._submitHandler = null;
     this._deleteButtonClickHandler = null;
     this._rollupButtonClickHandler = null;
@@ -233,12 +234,16 @@ export default class EventEditComponent extends AbstractSmartComponent {
   }
 
   setFavoriteToggleHandler(handler) {
-    this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, handler);
+    this._favoriteBtnElement.addEventListener(`click`, handler);
   }
 
   setRollupButtonClickHandler(handler) {
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
     this._rollupButtonClickHandler = handler;
+  }
+
+  disableFavorite() {
+    this._favoriteBtnElement.disabled = `disabled`;
   }
 
   disableSave() {
@@ -268,7 +273,6 @@ export default class EventEditComponent extends AbstractSmartComponent {
   deactivateWarningFrame() {
     this.getElement().style.outline = ``;
   }
-
 
   _applyFlatpickr() {
     const DateType = {
