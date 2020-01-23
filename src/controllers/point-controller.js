@@ -1,5 +1,7 @@
+import moment from "moment";
 import EventComponent from "../components/event-component";
 import EventEditComponent from "../components/event-edit-component";
+import EventAdapterModel from "../models/event-adapter-model";
 import {removeElement, renderElement, RenderPosition, replaceElement} from "../utils/render";
 import {Mode} from "../const";
 
@@ -18,35 +20,39 @@ export default class PointController {
     this._replaceEditToEvent = this._replaceEditToEvent.bind(this);
   }
 
-  render(event, mode) {
+  render(eventAdapterModel, mode, backEndStaticData) {
     const oldEventComponent = this._eventComponent;
     const oldEventEditComponent = this._eventEditComponent;
     this._mode = mode;
 
-    this._eventComponent = new EventComponent(event);
-    this._eventEditComponent = new EventEditComponent(event);
+    this._eventComponent = new EventComponent(eventAdapterModel);
+    this._eventEditComponent = new EventEditComponent(eventAdapterModel, backEndStaticData);
 
     this._eventComponent.setEditButtonClickHandler(() => {
       this._replaceEventToEdit();
       document.addEventListener(`keydown`, this._onEscKeyDown);
     });
 
+    this._eventEditComponent.setRollupButtonClickHandler(() => {
+      this._replaceEditToEvent();
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
+    });
+
     this._eventEditComponent.setFavoriteToggleHandler(() => {
-      this._onDataChange(this, event, Object.assign({}, event, {
-        isFavorite: !event.isFavorite,
+      this._onDataChange(this, eventAdapterModel, Object.assign({}, eventAdapterModel, {
+        isFavorite: !eventAdapterModel.isFavorite,
       }));
     });
 
     this._eventEditComponent.setSubmitHandler((evt) => {
       evt.preventDefault();
-      const data = this._eventEditComponent.getData();
-      data.isNewEvent = false;
-      this._onDataChange(this, event, Object.assign({}, event, data));
-      this._replaceEditToEvent();
+      const componentData = this._eventEditComponent.getData();
+      const newEventAdapterModel = this._parseFormData(componentData, eventAdapterModel);
+      this._onDataChange(this, eventAdapterModel, newEventAdapterModel);
     });
     this._eventEditComponent.setDeleteButtonClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, event, null);
+      this._onDataChange(this, eventAdapterModel, null);
     });
 
 
@@ -80,6 +86,33 @@ export default class PointController {
     if (this._mode !== Mode.DEFAULT) {
       this._replaceEditToEvent();
     }
+  }
+
+  _parseFormData({formData, destination, offers, typeToOffers}, eventAdapterModel) {
+    return EventAdapterModel.replenishOffers(typeToOffers.get(formData.get(`event-type`)), new EventAdapterModel({
+      'id': eventAdapterModel.id,
+      'type': formData.get(`event-type`),
+      'date_from': new Date(moment(formData.get(`event-start-time`), `DD-MM-YY HH:mm`).utc().format()).toISOString(),
+      'date_to': new Date(moment(formData.get(`event-end-time`), `DD-MM-YY HH:mm`).utc().format()).toISOString(),
+      'destination': {
+        'name': formData.get(`event-destination`),
+        'description': destination.description,
+        'pictures': destination.photos.map((it) => {
+          return {
+            'src': it.src,
+            'description': it.description,
+          };
+        }),
+      },
+      'base_price': formData.get(`event-price`),
+      'is_favorite': eventAdapterModel.isFavorite,
+      'offers': offers.filter((it) => it.isChecked).map((it) => {
+        return {
+          'title': it.title,
+          'price': it.price,
+        };
+      }),
+    }));
   }
 
   _replaceEditToEvent() {

@@ -2,29 +2,31 @@ import {FilterType, SortType} from "../const";
 
 export default class EventsModel {
   constructor() {
-    this._events = [];
+    this._eventAdapterModels = [];
     this._activeFilterType = FilterType.EVERYTHING;
     this._activeSortType = SortType.EVENT;
 
+    this._destinations = [];
+    this._typeToOffers = new Map();
     this._filterChangeHandlers = [];
   }
 
-  setEvents(events) {
-    this._events = Array.from(events);
+  setEvents(eventAdapterModels) {
+    this._eventAdapterModels = Array.from(eventAdapterModels);
   }
 
   getEvents() {
-    return this._events.slice();
+    return this._eventAdapterModels.slice();
   }
 
-  updateEvent(id, event) {
-    const index = this._events.findIndex((it) => it.id === id);
+  updateEvent(id, eventAdapterModel) {
+    const index = this._eventAdapterModels.findIndex((it) => it.id === id);
 
     if (index === -1) {
       return false;
     }
 
-    this._events = [].concat(this._events.slice(0, index), event, this._events.slice(index + 1));
+    this._eventAdapterModels = [].concat(this._eventAdapterModels.slice(0, index), eventAdapterModel, this._eventAdapterModels.slice(index + 1));
 
     return true;
   }
@@ -33,11 +35,11 @@ export default class EventsModel {
     const nowDate = new Date();
     switch (this._activeFilterType) {
       case FilterType.EVERYTHING:
-        return this._events.slice().sort((a, b) => a.date.start - b.date.start);
+        return this._eventAdapterModels.slice().sort((a, b) => a.date.start - b.date.start);
       case FilterType.FUTURE:
-        return this._events.filter((it) => it.date.start > nowDate);
+        return this._eventAdapterModels.filter((it) => it.date.start > nowDate);
       case FilterType.PAST:
-        return this._events.filter((it) => it.date.start <= nowDate);
+        return this._eventAdapterModels.filter((it) => it.date.start <= nowDate);
     }
     return false;
   }
@@ -46,8 +48,8 @@ export default class EventsModel {
     return this.updateEvent(id, []);
   }
 
-  addEvent(event) {
-    this._events = [].concat(event, this._events);
+  addEvent(eventAdapterModel) {
+    this._eventAdapterModels = [].concat(eventAdapterModel, this._eventAdapterModels);
   }
 
   getFilters() {
@@ -84,6 +86,22 @@ export default class EventsModel {
 
   setSortType(sortType) {
     this._activeSortType = sortType;
+  }
+
+  getDestinations() {
+    return this._destinations.slice();
+  }
+
+  setDestinations(destinations) {
+    this._destinations = destinations;
+  }
+
+  getTypeToOffers() {
+    return this._typeToOffers;
+  }
+
+  setTypeToOffers(typeToOffers) {
+    this._typeToOffers = typeToOffers;
   }
 
   _callHandlers(handlers) {

@@ -1,3 +1,4 @@
+import API from "./api";
 import SiteMenuTitleComponent from "./components/site-menu-title-component";
 import SiteMenuComponent from "./components/site-menu-component";
 import TripInfoCostComponent from "./components/trip-info-cost-component";
@@ -6,17 +7,17 @@ import TripEventsComponent from "./components/trip-events-component";
 import StatisticsComponent from "./components/statitstics-component";
 import TripController from "./controllers/trip-controller";
 import FilterController from "./controllers/filter-controller";
-import {generateEvents} from "./mock/events";
 import {MenuName, menuNames} from "./const";
 import {renderElement} from "./utils/render";
 import EventsModel from "./models/events-model";
+import EventAdapterModel from "./models/event-adapter-model";
 import 'flatpickr/dist/flatpickr.css';
 
-const EVENT_COUNT = 15;
-const events = generateEvents(EVENT_COUNT);
+const AUTHORIZATION = `Basic 6PZAz5uh8iB4RIAL336X`;
+const END_POINT = `https://htmlacademy-es-10.appspot.com/big-trip`;
+const api = new API(END_POINT, AUTHORIZATION);
 
 const eventsModel = new EventsModel();
-eventsModel.setEvents(events);
 
 const tripMainElement = document.querySelector(`.trip-main`);
 
@@ -24,7 +25,6 @@ const tripMainEventAddBtnComponent = new TripMainEventAddBtnComponent();
 renderElement(tripMainElement, tripMainEventAddBtnComponent);
 
 const tripInfoElement = tripMainElement.querySelector(`.trip-info`);
-renderElement(tripInfoElement, new TripInfoCostComponent(events));
 
 const tripControlsElement = tripMainElement.querySelector(`.trip-controls`);
 
@@ -34,7 +34,6 @@ renderElement(tripControlsElement, siteMenuTitleComponent);
 renderElement(tripControlsElement, siteMenuComponent);
 
 const filterController = new FilterController(tripControlsElement, eventsModel);
-filterController.render();
 
 const pageBodyContainerElement = document.querySelector(`.page-body__page-main .page-body__container`);
 const tripEventsComponent = new TripEventsComponent();
@@ -42,8 +41,7 @@ const statisticsComponent = new StatisticsComponent(eventsModel);
 renderElement(pageBodyContainerElement, tripEventsComponent);
 renderElement(pageBodyContainerElement, statisticsComponent);
 
-const tripController = new TripController(tripEventsComponent, tripInfoElement, eventsModel);
-tripController.render();
+const tripController = new TripController(tripEventsComponent, tripInfoElement, eventsModel, api);
 statisticsComponent.hide();
 
 tripMainEventAddBtnComponent.setAddButtonClickHandler(() => {
@@ -64,4 +62,21 @@ siteMenuComponent.setChangeHandler((menuName) => {
       filterController.hide();
       statisticsComponent.show();
   }
+});
+
+Promise.all([
+  api.getOffers().then((offerAdapterModel) => offerAdapterModel),
+  api.getDestinations().then((destinationAdapterModel) => destinationAdapterModel),
+  api.getPoints().then((eventAdapterModels) => eventAdapterModels),
+]).then(([offerAdapterModel, destinationAdapterModel, eventAdapterModels]) => {
+  eventsModel.setDestinations(destinationAdapterModel.destinations);
+  eventsModel.setTypeToOffers(offerAdapterModel.typeToOffers);
+  eventAdapterModels.forEach((it) => {
+    EventAdapterModel.replenishOffers(offerAdapterModel.typeToOffers.get(it.type), it);
+  });
+  eventsModel.setEvents(eventAdapterModels);
+
+  renderElement(tripInfoElement, new TripInfoCostComponent(eventAdapterModels));
+  filterController.render();
+  tripController.render();
 });

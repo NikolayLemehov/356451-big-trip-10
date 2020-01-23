@@ -1,11 +1,11 @@
 import AbstractComponent from "./abstract-component";
-import {MONTHS} from "../const";
+import moment from "moment";
 
 const createDayInfoTemplate = (date, dayCount = null) => {
   let dayInfoContent = ``;
   if (dayCount) {
     const dateTime = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-    const month = `${MONTHS[date.getMonth()]}`;
+    const month = moment(date).format(`MMM`);
     dayInfoContent = `<span class="day__counter">${dayCount}</span>
     <time class="day__date" datetime="${dateTime}">${month} ${date.getDate()}</time>`;
   }

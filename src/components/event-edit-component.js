@@ -1,6 +1,6 @@
 import flatpickr from 'flatpickr';
 import {formatDate, formatTime} from "../utils/common";
-import {cities, groupToTypes, groupTypeToPreposition, offerNames, offersStructure, typeToGroup} from "../mock/events";
+import {groupToTypes, groupTypeToPreposition, typeToGroup} from "../const";
 import AbstractSmartComponent from "./abstract-smart-component";
 
 const FLATPICKR_DATE_FORMAT = `d/m/y H:i`;
@@ -24,17 +24,17 @@ const createEventTypeGroupTemplate = (group, checkedType) => {
   );
 };
 
-const createOfferTemplate = (offer, isChecked) => {
-  const {name, title, price} = offer;
+const createOfferTemplate = (offer) => {
+  const {name, title, price, isChecked} = offer;
   return (
     `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden"
-        id="event-offer-${name}-1"
+        id="${name}"
         type="checkbox"
-        name="event-offer-${name}"
+        name="${name}"
         ${isChecked ? `checked` : ``}
       >
-      <label class="event__offer-label" for="event-offer-${name}-1">
+      <label class="event__offer-label" for="${name}">
         <span class="event__offer-title">${title}</span>
         &plus;
         &euro;&nbsp;<span class="event__offer-price">${price}</span>
@@ -43,22 +43,20 @@ const createOfferTemplate = (offer, isChecked) => {
   );
 };
 
-const createEditEventTemplate = (event, option) => {
-  const {id, city, photos, destination, date, price, offers, isFavorite, isNewEvent} = event;
-  const {type} = option;
+const createEditEventTemplate = (event, destinations, option) => {
+  const {id, date, price, isFavorite, isNewEvent} = event;
+  const {type, destination, offers} = option;
 
   const startDate = `${formatDate(date.start)} ${formatTime(date.start)}`;
   const endDate = `${formatDate(date.end)} ${formatTime(date.end)}`;
   const preposition = groupTypeToPreposition.get(typeToGroup.get(type));
-  const isFavoriteAttribute = isFavorite ? `checked` : ``;
 
-  const getIsChecked = (name) => offers.find((offer) => offer.name === name);
-  const offersMarkUp = offerNames.map((it) => createOfferTemplate(offersStructure[it], getIsChecked(it))).join(``);
-
+  const offersMarkUp = offers.length > 0 ? offers.map((it) => createOfferTemplate(it)).join(``) : ``;
   const eventTypeGroupsTemplate = Array.from(groupToTypes.keys()).map((it) => createEventTypeGroupTemplate(it, type)).join(``);
 
-  const photoElementsTemplate = photos.map((url) => `<img class="event__photo" src="${url}" alt="Event photo">`).join(``);
-  const cityOptionsTemplate = cities.map((it) => `<option value="${it}"></option>`).join(``);
+  const photoElementsTemplate = destination.photos
+    .map((it) => `<img class="event__photo" src="${it.src}" alt="${it.description}">`).join(``);
+  const cityOptionsTemplate = destinations.map((it) => `<option value="${it.city}"></option>`).join(``);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -80,7 +78,7 @@ const createEditEventTemplate = (event, option) => {
             ${id} ${type} ${preposition}
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination"
-            value="${city}" list="destination-list-1">
+            value="${destination.city}" list="destination-list-1">
           <datalist id="destination-list-1">
             ${cityOptionsTemplate}
           </datalist>
@@ -115,7 +113,7 @@ const createEditEventTemplate = (event, option) => {
         <button class="event__reset-btn ${isNewEvent ? `visually-hidden` : ``}" type="button"">Delete</button>
 
         <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite"
-          ${isFavoriteAttribute}>
+          ${isFavorite ? `checked` : ``}>
         <label class="event__favorite-btn" for="event-favorite-1">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -129,17 +127,17 @@ const createEditEventTemplate = (event, option) => {
       </header>
       <section class="event__details">
 
+        ${offers.length > 0 ? `
         <section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
           <div class="event__available-offers">
             ${offersMarkUp}
           </div>
-        </section>
+        </section>` : ``}
 
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${destination}</p>
+          <p class="event__destination-description">${destination.description}</p>
 
           <div class="event__photos-container">
             <div class="event__photos-tape">
@@ -152,22 +150,20 @@ const createEditEventTemplate = (event, option) => {
   );
 };
 
-const parseFormData = (formData) => {
-  return {
-    type: formData.get(`event-type`),
-    city: formData.get(`event-destination`),
-    price: formData.get(`event-price`),
-    isFavorite: formData.get(`event-favorite`),
-  };
-};
-
 export default class EventEditComponent extends AbstractSmartComponent {
-  constructor(event) {
+  constructor(event, {destinations, typeToOffers}) {
     super();
     this._event = event;
+    this._destinations = destinations;
+    this._typeToOffers = typeToOffers;
+
     this._type = event.type;
+    this._destination = event.destination;
+    this._offers = event.offers;
+
     this._submitHandler = null;
     this._deleteButtonClickHandler = null;
+    this._rollupButtonClickHandler = null;
     this._flatpickr = null;
 
     this._applyFlatpickr();
@@ -175,27 +171,35 @@ export default class EventEditComponent extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createEditEventTemplate(this._event, {
+    return createEditEventTemplate(this._event, this._destinations, {
       type: this._type,
+      destination: this._destination,
+      offers: this._offers,
     });
   }
 
   recoveryListeners() {
     this.setSubmitHandler(this._submitHandler);
     this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
+    this.setRollupButtonClickHandler(this._rollupButtonClickHandler);
     this._subscribeOnEvents();
   }
 
-  rerender() {
+  rerender(onFocusElement) {
     super.rerender();
 
     this._applyFlatpickr();
+    if (onFocusElement) {
+      onFocusElement();
+    }
   }
 
   reset() {
     const event = this._event;
 
     this._type = event.type;
+    this._destination = event.destination;
+    this._offers = event.offers;
     this.rerender();
   }
 
@@ -213,13 +217,21 @@ export default class EventEditComponent extends AbstractSmartComponent {
 
   getData() {
     const form = this.getElement();
-    const formData = new FormData(form);
-
-    return parseFormData(formData);
+    return {
+      formData: new FormData(form),
+      destination: this._destination,
+      offers: this._offers,
+      typeToOffers: this._typeToOffers,
+    };
   }
 
   setFavoriteToggleHandler(handler) {
     this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, handler);
+  }
+
+  setRollupButtonClickHandler(handler) {
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
+    this._rollupButtonClickHandler = handler;
   }
 
 
@@ -249,6 +261,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
       defaultDate: this._event.date[dateType] === null ? new Date() : this._event.date[dateType],
     });
   }
+
   _subscribeOnEvents() {
     const element = this.getElement();
 
@@ -258,7 +271,28 @@ export default class EventEditComponent extends AbstractSmartComponent {
       });
       if (radioTypeInputElement) {
         this._type = radioTypeInputElement.value;
+        this._offers = this._typeToOffers.get(this._type);
         this.rerender();
+      }
+    });
+
+    element.querySelectorAll(`.event__offer-checkbox`).forEach((checkboxElement, i) => {
+      checkboxElement.addEventListener(`change`, () => {
+        this._offers[i].isChecked = !this._offers[i].isChecked;
+      });
+    });
+
+    element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
+      const destination = this._destinations.find((it) => it.city === evt.target.value);
+      if (destination) {
+        this._destination = destination;
+        this.rerender(() => {
+          const newElement = this.getElement().querySelector(`.event__input--destination`);
+          newElement.focus();
+          newElement.selectionStart = newElement.value.length;
+        });
+      } else {
+        element.querySelector(`.event__section--destination`).remove();
       }
     });
   }

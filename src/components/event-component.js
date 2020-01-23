@@ -1,8 +1,8 @@
 import {formatTime, getDuration} from "../utils/common";
 import AbstractComponent from "./abstract-component";
-import {groupTypeToPreposition, typeToGroup} from "../mock/events";
+import {groupTypeToPreposition, typeToGroup} from "../const";
 
-const createOffersTemplate = (offers) => offers
+const createOffersTemplate = (offers) => offers.filter((it) => it.isChecked === true)
   .map((offer) => {
     return (
       `<li class="event__offer">
@@ -15,7 +15,7 @@ const createOffersTemplate = (offers) => offers
   .join(``);
 
 const createEventTemplate = (event) => {
-  const {id, type, date, price, offers} = event;
+  const {id, type, date, price, offers, destination} = event;
   const duration = getDuration(date.start, date.end);
   const preposition = groupTypeToPreposition.get(typeToGroup.get(type));
 
@@ -25,7 +25,7 @@ const createEventTemplate = (event) => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${id} ${type} ${preposition} airport</h3>
+        <h3 class="event__title">${id} ${type} ${preposition} ${destination.city}</h3>
 
         <div class="event__schedule">
           <p class="event__time">
