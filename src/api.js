@@ -29,6 +29,17 @@ export default class API {
       .then(EventAdapterModel.parseEvents);
   }
 
+  createPoint(eventAdapterModel) {
+    return this._load({
+      url: `points`,
+      method: Method.POST,
+      body: JSON.stringify(eventAdapterModel.getRAW()),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then((response) => response.json())
+      .then(EventAdapterModel.parseEvent);
+  }
+
   updatePoint(id, eventAdapterModel) {
     return this._load({
       url: `points/${id}`,
@@ -38,6 +49,10 @@ export default class API {
     })
       .then((response) => response.json())
       .then(EventAdapterModel.parseEvent);
+  }
+
+  deletePoint(id) {
+    return this._load({url: `points/${id}`, method: Method.DELETE});
   }
 
   getDestinations() {

@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component";
+import AbstractSmartComponent from "./abstract-smart-component";
 import moment from "moment";
 
 const getPeriod = (events) => {
@@ -19,7 +19,7 @@ const getPeriod = (events) => {
 };
 
 const createTripInfoTemplate = (events) => {
-  const cities = events.map((event) => event.city).map((city, i, arr) => city === arr[i + 1] ? `` : city).filter(Boolean);
+  const cities = events.map((event) => event.destination.city).map((city, i, arr) => city === arr[i + 1] ? `` : city).filter(Boolean);
   const startCity = cities[0];
   const endCity = cities[cities.length - 1];
   const middleCity = cities.length > 3 ? `...` : cities[1];
@@ -33,7 +33,7 @@ const createTripInfoTemplate = (events) => {
   );
 };
 
-export default class TripInfoMainComponent extends AbstractComponent {
+export default class TripInfoMainComponent extends AbstractSmartComponent {
   constructor(events) {
     super();
     this._events = events;
@@ -42,4 +42,11 @@ export default class TripInfoMainComponent extends AbstractComponent {
   getTemplate() {
     return createTripInfoTemplate(this._events);
   }
+
+  rerender(events) {
+    this._events = events;
+    super.rerender(this._events);
+  }
+
+  recoveryListeners() {}
 }

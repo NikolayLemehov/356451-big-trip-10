@@ -3,7 +3,9 @@ import EventComponent from "../components/event-component";
 import EventEditComponent from "../components/event-edit-component";
 import EventAdapterModel from "../models/event-adapter-model";
 import {removeElement, renderElement, RenderPosition, replaceElement} from "../utils/render";
-import {Mode} from "../const";
+import {EmptyEvent, Mode} from "../const";
+
+const SHAKE_ANIMATION_TIMEOUT = 600;
 
 export default class PointController {
   constructor(container, onDataChange, onViewChange) {
@@ -34,24 +36,32 @@ export default class PointController {
     });
 
     this._eventEditComponent.setRollupButtonClickHandler(() => {
-      this._replaceEditToEvent();
+      if (this._mode === Mode.ADDING) {
+        this._onDataChange(this, EmptyEvent, null);
+      } else {
+        this._replaceEditToEvent();
+      }
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     });
 
     this._eventEditComponent.setFavoriteToggleHandler(() => {
-      this._onDataChange(this, eventAdapterModel, Object.assign({}, eventAdapterModel, {
-        isFavorite: !eventAdapterModel.isFavorite,
-      }));
+      this._eventEditComponent.disableFavorite();
+      const newEventAdapterModel = EventAdapterModel.clone(eventAdapterModel);
+      newEventAdapterModel.isFavorite = !newEventAdapterModel.isFavorite;
+      this._onDataChange(this, eventAdapterModel, newEventAdapterModel);
     });
 
     this._eventEditComponent.setSubmitHandler((evt) => {
       evt.preventDefault();
       const componentData = this._eventEditComponent.getData();
+      this._eventEditComponent.disableSave();
       const newEventAdapterModel = this._parseFormData(componentData, eventAdapterModel);
       this._onDataChange(this, eventAdapterModel, newEventAdapterModel);
     });
+
     this._eventEditComponent.setDeleteButtonClickHandler((evt) => {
       evt.preventDefault();
+      this._eventEditComponent.disableDelete();
       this._onDataChange(this, eventAdapterModel, null);
     });
 
@@ -80,6 +90,23 @@ export default class PointController {
     removeElement(this._eventEditComponent);
     removeElement(this._eventComponent);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
+  }
+
+  shake() {
+    const removeAnimation = () => {
+      this._eventEditComponent.getElement().classList.remove(`shake`);
+      this._eventEditComponent.deactivateWarningFrame();
+    };
+    const animate = () => {
+      this._eventEditComponent.activeSave();
+      this._eventEditComponent.activeDelete();
+
+      this._eventEditComponent.activateWarningFrame();
+
+      this._eventEditComponent.getElement().classList.add(`shake`);
+      setTimeout(removeAnimation, SHAKE_ANIMATION_TIMEOUT);
+    };
+    setTimeout(animate, SHAKE_ANIMATION_TIMEOUT);
   }
 
   setDefaultView() {
@@ -133,6 +160,9 @@ export default class PointController {
     const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
 
     if (isEscKey) {
+      if (this._mode === Mode.ADDING) {
+        this._onDataChange(this, EmptyEvent, null);
+      }
       this._replaceEditToEvent();
     }
   }

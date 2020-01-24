@@ -44,8 +44,8 @@ const createOfferTemplate = (offer) => {
 };
 
 const createEditEventTemplate = (event, destinations, option) => {
-  const {id, date, price, isFavorite, isNewEvent} = event;
-  const {type, destination, offers} = option;
+  const {date, price, isFavorite, isNewEvent} = event;
+  const {type, destination, offers, hasDestination} = option;
 
   const startDate = `${formatDate(date.start)} ${formatTime(date.start)}`;
   const endDate = `${formatDate(date.end)} ${formatTime(date.end)}`;
@@ -64,7 +64,8 @@ const createEditEventTemplate = (event, destinations, option) => {
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
             <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
+            <img class="event__type-icon" width="17" height="17"
+              src="img/icons/${type}.png" alt="Event type icon">
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -75,7 +76,7 @@ const createEditEventTemplate = (event, destinations, option) => {
 
         <div class="event__field-group  event__field-group--destination">
           <label class="event__label  event__type-output" for="event-destination-1">
-            ${id} ${type} ${preposition}
+            ${type === `trip` ? `` : `${type} ${preposition}`}
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination"
             value="${destination.city}" list="destination-list-1">
@@ -109,8 +110,10 @@ const createEditEventTemplate = (event, destinations, option) => {
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
 
-        <button class="event__reset-btn ${isNewEvent ? `` : `visually-hidden`}" type="reset">Reset</button>
-        <button class="event__reset-btn ${isNewEvent ? `visually-hidden` : ``}" type="button"">Delete</button>
+        <button class="event__reset-btn event__reset-btn--reset ${isNewEvent ? `` : `visually-hidden`}"
+          type="reset">Reset</button>
+        <button class="event__reset-btn event__reset-btn--delete ${isNewEvent ? `visually-hidden` : ``}"
+          type="button"">Delete</button>
 
         <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite"
           ${isFavorite ? `checked` : ``}>
@@ -122,7 +125,7 @@ const createEditEventTemplate = (event, destinations, option) => {
         </label>
 
         <button class="event__rollup-btn" type="button">
-          <span class="visually-hidden">Open event</span>
+          <span class="visually-hidden">Close event</span>
         </button>
       </header>
       <section class="event__details">
@@ -135,7 +138,7 @@ const createEditEventTemplate = (event, destinations, option) => {
           </div>
         </section>` : ``}
 
-        <section class="event__section  event__section--destination">
+        ${hasDestination ? `<section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
           <p class="event__destination-description">${destination.description}</p>
 
@@ -144,7 +147,8 @@ const createEditEventTemplate = (event, destinations, option) => {
               ${photoElementsTemplate}
             </div>
           </div>
-        </section>
+        </section>` : ``}
+
       </section>
     </form>`
   );
@@ -160,7 +164,11 @@ export default class EventEditComponent extends AbstractSmartComponent {
     this._type = event.type;
     this._destination = event.destination;
     this._offers = event.offers;
+    this._hasDestination = !!event.destination.description && event.destination.photos.length > 0;
 
+    this._saveBtnElement = this.getElement().querySelector(`.event__save-btn`);
+    this._deleteBtnElement = this.getElement().querySelector(`.event__reset-btn--delete`);
+    this._favoriteBtnElement = this.getElement().querySelector(`.event__favorite-checkbox`);
     this._submitHandler = null;
     this._deleteButtonClickHandler = null;
     this._rollupButtonClickHandler = null;
@@ -175,6 +183,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
       type: this._type,
       destination: this._destination,
       offers: this._offers,
+      hasDestination: this._hasDestination,
     });
   }
 
@@ -200,6 +209,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
     this._type = event.type;
     this._destination = event.destination;
     this._offers = event.offers;
+    this._hasDestination = !!event.destination.description && event.destination.photos.length > 0;
     this.rerender();
   }
 
@@ -209,9 +219,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
   }
 
   setDeleteButtonClickHandler(handler) {
-    this.getElement().querySelector(`.event__reset-btn`)
-      .addEventListener(`click`, handler);
-
+    this._deleteBtnElement.addEventListener(`click`, handler);
     this._deleteButtonClickHandler = handler;
   }
 
@@ -226,7 +234,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
   }
 
   setFavoriteToggleHandler(handler) {
-    this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, handler);
+    this._favoriteBtnElement.addEventListener(`click`, handler);
   }
 
   setRollupButtonClickHandler(handler) {
@@ -234,6 +242,37 @@ export default class EventEditComponent extends AbstractSmartComponent {
     this._rollupButtonClickHandler = handler;
   }
 
+  disableFavorite() {
+    this._favoriteBtnElement.disabled = `disabled`;
+  }
+
+  disableSave() {
+    this._saveBtnElement.disabled = `disabled`;
+    this._saveBtnElement.textContent = `Saving...`;
+  }
+
+  activeSave() {
+    this._saveBtnElement.disabled = ``;
+    this._saveBtnElement.textContent = `Save`;
+  }
+
+  disableDelete() {
+    this._deleteBtnElement.disabled = `disabled`;
+    this._deleteBtnElement.textContent = `Deleting...`;
+  }
+
+  activeDelete() {
+    this._deleteBtnElement.disabled = ``;
+    this._deleteBtnElement.textContent = `Delete`;
+  }
+
+  activateWarningFrame() {
+    this.getElement().style.outline = `10px solid red`;
+  }
+
+  deactivateWarningFrame() {
+    this.getElement().style.outline = ``;
+  }
 
   _applyFlatpickr() {
     const DateType = {
@@ -285,6 +324,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
     element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
       const destination = this._destinations.find((it) => it.city === evt.target.value);
       if (destination) {
+        this._hasDestination = true;
         this._destination = destination;
         this.rerender(() => {
           const newElement = this.getElement().querySelector(`.event__input--destination`);
@@ -292,8 +332,21 @@ export default class EventEditComponent extends AbstractSmartComponent {
           newElement.selectionStart = newElement.value.length;
         });
       } else {
+        this._hasDestination = false;
         element.querySelector(`.event__section--destination`).remove();
       }
+    });
+
+    element.querySelector(`.event__reset-btn--reset`).addEventListener(`click`, () => {
+      this._type = `trip`;
+      this._destination = {
+        city: ``,
+        description: ``,
+        photos: [],
+      };
+      this._offers = [];
+      this._hasDestination = false;
+      this.rerender();
     });
   }
 }

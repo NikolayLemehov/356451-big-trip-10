@@ -1,7 +1,6 @@
 import API from "./api";
 import SiteMenuTitleComponent from "./components/site-menu-title-component";
 import SiteMenuComponent from "./components/site-menu-component";
-import TripInfoCostComponent from "./components/trip-info-cost-component";
 import TripMainEventAddBtnComponent from "./components/trip-main-event-add-btn-component";
 import TripEventsComponent from "./components/trip-events-component";
 import StatisticsComponent from "./components/statitstics-component";
@@ -76,7 +75,6 @@ Promise.all([
   });
   eventsModel.setEvents(eventAdapterModels);
 
-  renderElement(tripInfoElement, new TripInfoCostComponent(eventAdapterModels));
   filterController.render();
   tripController.render();
 });

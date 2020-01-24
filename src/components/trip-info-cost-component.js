@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component";
+import AbstractSmartComponent from "./abstract-smart-component";
 
 const createTripInfoTemplate = (events) => {
   const totalCost = events.reduce((total, event) => total + event.price, 0);
@@ -10,7 +10,7 @@ const createTripInfoTemplate = (events) => {
   );
 };
 
-export default class TripInfoCostComponent extends AbstractComponent {
+export default class TripInfoCostComponent extends AbstractSmartComponent {
   constructor(events) {
     super();
     this._events = events;
@@ -19,4 +19,11 @@ export default class TripInfoCostComponent extends AbstractComponent {
   getTemplate() {
     return createTripInfoTemplate(this._events);
   }
+
+  rerender(events) {
+    this._events = events;
+    super.rerender(this._events);
+  }
+
+  recoveryListeners() {}
 }
