@@ -14,8 +14,18 @@ import 'flatpickr/dist/flatpickr.css';
 
 const AUTHORIZATION = `Basic 6PZAz5uh8iB4RIAL336X`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/big-trip`;
-const api = new API(END_POINT, AUTHORIZATION);
 
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`)
+    .then(() => {
+      document.title += `[SW]`;
+    })
+    .catch(() => {
+      document.title += `[no SW]`;
+    });
+});
+
+const api = new API(END_POINT, AUTHORIZATION);
 const eventsModel = new EventsModel();
 
 const tripMainElement = document.querySelector(`.trip-main`);
