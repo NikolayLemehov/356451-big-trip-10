@@ -2,7 +2,9 @@ import flatpickr from 'flatpickr';
 import {formatDate, formatTime} from "../utils/common";
 import {groupToTypes, groupTypeToPreposition, typeToGroup} from "../const";
 import AbstractSmartComponent from "./abstract-smart-component";
+import {debounce} from "../utils/debounce";
 
+const DEBOUNCE_DELAY = 1000;
 const FLATPICKR_DATE_FORMAT = `d/m/y H:i`;
 const eventTypeTemplate = (type, checkedType) => {
   const isCheckedType = type === checkedType ? `checked` : ``;
@@ -160,6 +162,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
     this._event = event;
     this._destinations = destinations;
     this._typeToOffers = typeToOffers;
+    this._isFavorite = event.isFavorite;
 
     this._type = event.type;
     this._destination = event.destination;
@@ -234,7 +237,11 @@ export default class EventEditComponent extends AbstractSmartComponent {
   }
 
   setFavoriteToggleHandler(handler) {
-    this._favoriteBtnElement.addEventListener(`click`, handler);
+    const debounceHandler = debounce(handler, DEBOUNCE_DELAY);
+
+    this._favoriteBtnElement.addEventListener(`click`, () => {
+      debounceHandler(this._isFavorite !== this._favoriteBtnElement.checked);
+    });
   }
 
   setRollupButtonClickHandler(handler) {
