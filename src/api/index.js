@@ -1,6 +1,6 @@
-import EventAdapterModel from "./models/event-adapter-model";
-import DestinationAdapterModel from "./models/destination-adapter-model";
-import OffersAdapterModel from "./models/offer-adapter-model";
+import EventAdapterModel from "../models/event-adapter-model";
+import DestinationAdapterModel from "../models/destination-adapter-model";
+import OffersAdapterModel from "../models/offer-adapter-model";
 
 const Method = {
   GET: `GET`,
@@ -17,7 +17,7 @@ const checkStatus = (response) => {
   }
 };
 
-export default class API {
+export default class Index {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
     this._authorization = authorization;
