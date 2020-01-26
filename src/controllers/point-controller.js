@@ -35,21 +35,17 @@ export default class PointController {
       document.addEventListener(`keydown`, this._onEscKeyDown);
     });
 
-    const closeNewEditEvent = () => {
+    this._eventEditComponent.setRollupButtonClickHandler(() => {
       if (this._mode === Mode.ADDING) {
         this._onDataChange(this, EmptyEvent, null);
       } else {
         this._replaceEditToEvent();
       }
       document.removeEventListener(`keydown`, this._onEscKeyDown);
-    };
-
-    this._eventEditComponent.setRollupButtonClickHandler(() => {
-      closeNewEditEvent();
     });
 
     this._eventEditComponent.setCancelButtonClickHandler(() => {
-      closeNewEditEvent();
+      this._onDataChange(this, EmptyEvent, null);
     });
 
     this._eventEditComponent.setFavoriteToggleHandler((isChange) => {
