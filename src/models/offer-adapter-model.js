@@ -1,7 +1,7 @@
 export default class OffersAdapterModel {
   constructor(endData) {
-    this.endOffers = endData;
-    this.typeToOffers = this.endOffers.reduce((acc, type) => {
+    this._endData = endData;
+    this.typeToOffers = endData.reduce((acc, type) => {
       return acc.set(type[`type`], type[`offers`]
         .map((offer, i) => {
           return {
@@ -13,6 +13,10 @@ export default class OffersAdapterModel {
           };
         }));
     }, new Map());
+  }
+
+  getRAW() {
+    return this._endData.slice();
   }
 
   static parseOffers(endData) {

@@ -1,6 +1,6 @@
 export default class DestinationAdapterModel {
   constructor(endData) {
-    this.endData = endData;
+    this._endData = endData;
     this.destinations = endData.map((it) => {
       return {
         city: it[`name`],
@@ -13,6 +13,10 @@ export default class DestinationAdapterModel {
         }),
       };
     });
+  }
+
+  getRAW() {
+    return this._endData.slice();
   }
 
   static parseDestination(endData) {

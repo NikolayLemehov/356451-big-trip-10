@@ -79,7 +79,6 @@ siteMenuComponent.setChangeHandler((menuName) => {
       statisticsComponent.show();
   }
 });
-
 Promise.all([
   apiWithProvider.getOffers().then((offerAdapterModel) => offerAdapterModel),
   apiWithProvider.getDestinations().then((destinationAdapterModel) => destinationAdapterModel),
@@ -94,4 +93,20 @@ Promise.all([
 
   filterController.render();
   tripController.render();
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+
+  if (!apiWithProvider.getSynchronize()) {
+    apiWithProvider.sync()
+      .then(() => {
+      })
+      .catch(() => {
+      });
+  }
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
 });
