@@ -104,11 +104,41 @@ export default class Provider {
     return Promise.resolve(OffersAdapterModel.parseOffers(storeOffers));
   }
 
+  sync() {
+    if (this._isOnLine()) {
+      const storeEvents = Object.values(this._store.getEvents());
+
+      return this._api.sync(storeEvents)
+        .then((response) => {
+          storeEvents.filter((event) => event.offline).forEach((event) => {
+            this._store.removeItem(event.id);
+          });
+
+          const createdEvents = this._getSyncedTasks(response.created);
+          const updatedEvents = this._getSyncedTasks(response.updated);
+
+          [...createdEvents, ...updatedEvents].forEach((event) => {
+            this._store.setItem(event.id, event);
+          });
+
+          this._isSynchronized = true;
+
+          return Promise.resolve();
+        });
+    }
+
+    return Promise.reject(new Error(`Sync data failed`));
+  }
+
   getSynchronize() {
     return this._isSynchronized;
   }
 
   _isOnLine() {
     return window.navigator.onLine;
+  }
+
+  _getSyncedTasks(items) {
+    items.filter(({success}) => success).map(({payload}) => payload.point);
   }
 }
