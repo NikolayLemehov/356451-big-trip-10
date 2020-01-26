@@ -41,8 +41,12 @@ self.addEventListener(`install`, (evt) => {
 self.addEventListener(`activate`, (evt) => {
   evt.waitUntil(caches.keys()
     .then((keys) => Promise.all(keys
-      .map((key) => key.indexOf(CACHE_PREFIX) === 0 && key !== CACHE_NAME ? caches.delete(key) : null)
-      .filter((key) => key !== null))))
+      .reduce((acc, key) => {
+        if (key.indexOf(CACHE_PREFIX) === 0 && key !== CACHE_NAME) {
+          acc.push(caches.delete(key));
+        }
+        return acc;
+      }, []);
 });
 
 self.addEventListener(`fetch`, (evt) => {
