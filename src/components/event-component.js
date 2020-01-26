@@ -2,7 +2,9 @@ import {formatTime, getDuration} from "../utils/common";
 import AbstractComponent from "./abstract-component";
 import {groupTypeToPreposition, typeToGroup} from "../const";
 
-const createOffersTemplate = (offers) => offers.filter((it) => it.isChecked === true)
+const MAX_SHOWING_OFFER = 3;
+
+const createOffersTemplate = (offers) => offers.filter((it) => it.isChecked).slice(0, MAX_SHOWING_OFFER)
   .map((offer) => {
     return (
       `<li class="event__offer">
