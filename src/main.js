@@ -97,7 +97,6 @@ Promise.all([
 
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);
-
   if (!apiWithProvider.getSynchronize()) {
     apiWithProvider.sync()
       .then(() => {

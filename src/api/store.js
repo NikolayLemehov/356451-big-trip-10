@@ -25,7 +25,6 @@ export default class Store {
       this._parsedStore[key] = JSON.parse(this._localStorage.getItem(this._storeKey))[key];
       return this._parsedStore[key];
     } catch (err) {
-      // this._parsedStore[key] = [];
       return [];
     }
   }
