@@ -113,7 +113,7 @@ const createEditEventTemplate = (event, destinations, option) => {
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
 
         <button class="event__reset-btn event__reset-btn--reset ${isNewEvent ? `` : `visually-hidden`}"
-          type="reset">Reset</button>
+          type="reset">Cancel</button>
         <button class="event__reset-btn event__reset-btn--delete ${isNewEvent ? `visually-hidden` : ``}"
           type="button"">Delete</button>
 
@@ -175,6 +175,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
     this._submitHandler = null;
     this._deleteButtonClickHandler = null;
     this._rollupButtonClickHandler = null;
+    this._cancelButtonClickHandler = null;
     this._flatpickr = null;
 
     this._applyFlatpickr();
@@ -194,6 +195,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
     this.setSubmitHandler(this._submitHandler);
     this.setDeleteButtonClickHandler(this._deleteButtonClickHandler);
     this.setRollupButtonClickHandler(this._rollupButtonClickHandler);
+    this.setCancelButtonClickHandler(this._cancelButtonClickHandler);
     this._subscribeOnEvents();
   }
 
@@ -247,6 +249,11 @@ export default class EventEditComponent extends AbstractSmartComponent {
   setRollupButtonClickHandler(handler) {
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
     this._rollupButtonClickHandler = handler;
+  }
+
+  setCancelButtonClickHandler(handler) {
+    this.getElement().querySelector(`.event__reset-btn--reset`).addEventListener(`click`, handler);
+    this._cancelButtonClickHandler = handler;
   }
 
   disableFavorite() {
@@ -342,18 +349,6 @@ export default class EventEditComponent extends AbstractSmartComponent {
         this._hasDestination = false;
         element.querySelector(`.event__section--destination`).remove();
       }
-    });
-
-    element.querySelector(`.event__reset-btn--reset`).addEventListener(`click`, () => {
-      this._type = `trip`;
-      this._destination = {
-        city: ``,
-        description: ``,
-        photos: [],
-      };
-      this._offers = [];
-      this._hasDestination = false;
-      this.rerender();
     });
   }
 }
