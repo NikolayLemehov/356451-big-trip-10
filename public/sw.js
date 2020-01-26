@@ -46,7 +46,7 @@ self.addEventListener(`activate`, (evt) => {
           acc.push(caches.delete(key));
         }
         return acc;
-      }, []);
+      }, []))));
 });
 
 self.addEventListener(`fetch`, (evt) => {
