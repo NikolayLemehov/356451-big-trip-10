@@ -21,6 +21,7 @@ export default class TripController {
     this._api = api;
 
     this._pointControllers = [];
+    this._creatingEventController = null;
     this._backEndStaticData = {
       destinations: [],
       typeToOffers: new Map(),
@@ -219,6 +220,10 @@ export default class TripController {
   }
 
   _onViewChange() {
+    if (this._creatingEventController) {
+      this._creatingEventController.destroy();
+      this._creatingEventController = null;
+    }
     this._pointControllers.forEach((it) => it.setDefaultView());
   }
 
