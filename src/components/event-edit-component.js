@@ -346,6 +346,9 @@ export default class EventEditComponent extends AbstractSmartComponent {
           newElement.selectionStart = newElement.value.length;
         });
       } else {
+        if (this._hasDestination) {
+          element.querySelector(`.event__section--destination`).remove();
+        }
         this._hasDestination = false;
         element.querySelector(`.event__section--destination`).remove();
       }
