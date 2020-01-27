@@ -1,17 +1,17 @@
-import Index from "./api";
-import SiteMenuTitleComponent from "./components/site-menu-title-component";
-import SiteMenuComponent from "./components/site-menu-component";
-import TripMainEventAddBtnComponent from "./components/trip-main-event-add-btn-component";
-import TripEventsComponent from "./components/trip-events-component";
-import StatisticsComponent from "./components/statitstics-component";
-import TripController from "./controllers/trip-controller";
-import FilterController from "./controllers/filter-controller";
-import {MenuName, menuNames} from "./const";
-import {renderElement} from "./utils/render";
-import EventsModel from "./models/events-model";
-import EventAdapterModel from "./models/event-adapter-model";
-import Store from "./api/store";
-import Provider from "./api/provider";
+import Index from './api';
+import SiteMenuTitleComponent from './components/site-menu-title-component';
+import SiteMenuComponent from './components/site-menu-component';
+import TripMainEventAddBtnComponent from './components/trip-main-event-add-btn-component';
+import TripEventsComponent from './components/trip-events-component';
+import StatisticsComponent from './components/statitstics-component';
+import TripController from './controllers/trip-controller';
+import FilterController from './controllers/filter-controller';
+import {MenuName, menuNames} from './const';
+import {renderElement} from './utils/render';
+import EventsModel from './models/events-model';
+import EventAdapterModel from './models/event-adapter-model';
+import Store from './api/store';
+import Provider from './api/provider';
 import 'flatpickr/dist/flatpickr.css';
 
 const STORE_PREFIX = `big-trip-localstorage`;
@@ -109,3 +109,4 @@ window.addEventListener(`online`, () => {
 window.addEventListener(`offline`, () => {
   document.title += ` [offline]`;
 });
+
