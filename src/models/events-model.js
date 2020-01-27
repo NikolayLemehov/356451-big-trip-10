@@ -1,4 +1,4 @@
-import {FilterType, SortType} from "../const";
+import {FilterType, SortType} from '../const';
 
 export default class EventsModel {
   constructor() {

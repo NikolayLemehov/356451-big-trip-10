@@ -1,5 +1,5 @@
-import AbstractSmartComponent from "./abstract-smart-component";
-import moment from "moment";
+import AbstractSmartComponent from './abstract-smart-component';
+import moment from 'moment';
 
 const getPeriod = (events) => {
   const startDate = new Date(events[0].date.start);

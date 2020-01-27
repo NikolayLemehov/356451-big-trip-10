@@ -1,8 +1,8 @@
 import flatpickr from 'flatpickr';
-import {formatDate, formatTime} from "../utils/common";
-import {groupToTypes, groupTypeToPreposition, typeToGroup} from "../const";
-import AbstractSmartComponent from "./abstract-smart-component";
-import {debounce} from "../utils/debounce";
+import {formatDate, formatTime} from '../utils/common';
+import {groupToTypes, groupTypeToPreposition, typeToGroup} from '../const';
+import AbstractSmartComponent from './abstract-smart-component';
+import {debounce} from '../utils/debounce';
 
 const DEBOUNCE_DELAY = 1000;
 const FLATPICKR_DATE_FORMAT = `d/m/y H:i`;

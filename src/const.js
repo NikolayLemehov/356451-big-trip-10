@@ -66,6 +66,8 @@ const groupToTypes = new Map([
 const typeToGroup = new Map();
 groupToTypes.forEach((value, key) => value.forEach((type) => typeToGroup.set(type, key)));
 
-export {EURO_SYMBOL, MenuName, menuNames, MILLISECONDS_PER_DAY,
+export {
+  EURO_SYMBOL, MenuName, menuNames, MILLISECONDS_PER_DAY,
   SortType, FilterType, EmptyEvent, Mode, Statistic,
-  GroupType, groupToTypes, groupTypeToPreposition, typeToGroup};
+  GroupType, groupToTypes, groupTypeToPreposition, typeToGroup,
+};

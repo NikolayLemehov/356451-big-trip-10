@@ -1,9 +1,9 @@
-import moment from "moment";
-import EventComponent from "../components/event-component";
-import EventEditComponent from "../components/event-edit-component";
-import EventAdapterModel from "../models/event-adapter-model";
-import {removeElement, renderElement, RenderPosition, replaceElement} from "../utils/render";
-import {EmptyEvent, Mode} from "../const";
+import moment from 'moment';
+import EventComponent from '../components/event-component';
+import EventEditComponent from '../components/event-edit-component';
+import EventAdapterModel from '../models/event-adapter-model';
+import {removeElement, renderElement, RenderPosition, replaceElement} from '../utils/render';
+import {EmptyEvent, Mode} from '../const';
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
 

@@ -1,7 +1,7 @@
-import nanoid from "nanoid";
-import EventAdapterModel from "../models/event-adapter-model";
-import DestinationAdapterModel from "../models/destination-adapter-model";
-import OffersAdapterModel from "../models/offer-adapter-model";
+import nanoid from 'nanoid';
+import EventAdapterModel from '../models/event-adapter-model';
+import DestinationAdapterModel from '../models/destination-adapter-model';
+import OffersAdapterModel from '../models/offer-adapter-model';
 
 export const StoreId = {
   EVENTS: `events`,

@@ -1,5 +1,5 @@
-import AbstractComponent from "./abstract-component";
-import {MenuName} from "../const";
+import AbstractComponent from './abstract-component';
+import {MenuName} from '../const';
 
 const CHECKED_MENU_CLASS = `trip-tabs__btn--active`;
 

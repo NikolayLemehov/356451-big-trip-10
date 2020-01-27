@@ -1,6 +1,6 @@
-import {renderElement, replaceElement} from "../utils/render";
-import FilterListComponent from "../components/filter-list-component";
-import FilterListTitleComponent from "../components/filter-list-title-component";
+import {renderElement, replaceElement} from '../utils/render';
+import FilterListComponent from '../components/filter-list-component';
+import FilterListTitleComponent from '../components/filter-list-title-component';
 
 export default class FilterController {
   constructor(container, eventsModel) {

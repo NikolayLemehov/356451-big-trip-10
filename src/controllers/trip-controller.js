@@ -1,16 +1,16 @@
-import EmptyComponent from "../components/empty-component";
-import TripInfoMainComponent from "../components/trip-info-main-component";
-import TripInfoCostComponent from "../components/trip-info-cost-component";
-import TripDaysComponent from "../components/trip-days-component";
-import TripEventsListComponent from "../components/trip-events-list-component";
-import TripSortComponent from "../components/trip-sort-component";
-import DayInfoComponent from "../components/day-info-component";
-import TripDaysItemComponent from "../components/trip-days-item-component";
-import PointController from "./point-controller";
-import EventAdapterModel from "../models/event-adapter-model";
-import {renderElement, RenderPosition} from "../utils/render";
-import {formatDate, getExactDate} from "../utils/common";
-import {EmptyEvent, MILLISECONDS_PER_DAY, Mode, SortType} from "../const";
+import EmptyComponent from '../components/empty-component';
+import TripInfoMainComponent from '../components/trip-info-main-component';
+import TripInfoCostComponent from '../components/trip-info-cost-component';
+import TripDaysComponent from '../components/trip-days-component';
+import TripEventsListComponent from '../components/trip-events-list-component';
+import TripSortComponent from '../components/trip-sort-component';
+import DayInfoComponent from '../components/day-info-component';
+import TripDaysItemComponent from '../components/trip-days-item-component';
+import PointController from './point-controller';
+import EventAdapterModel from '../models/event-adapter-model';
+import {renderElement, RenderPosition} from '../utils/render';
+import {formatDate, getExactDate} from '../utils/common';
+import {EmptyEvent, MILLISECONDS_PER_DAY, Mode, SortType} from '../const';
 
 export default class TripController {
   constructor(containerComponent, tripInfoElement, eventsModel, api) {

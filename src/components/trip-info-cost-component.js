@@ -1,4 +1,4 @@
-import AbstractSmartComponent from "./abstract-smart-component";
+import AbstractSmartComponent from './abstract-smart-component';
 
 const createTripInfoTemplate = (events) => {
   const totalCost = events.reduce((total, event) => total + event.price + event.offers

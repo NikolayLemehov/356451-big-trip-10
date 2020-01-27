@@ -1,5 +1,5 @@
-import AbstractComponent from "./abstract-component";
-import moment from "moment";
+import AbstractComponent from './abstract-component';
+import moment from 'moment';
 
 const createDayInfoTemplate = (date, dayCount = null) => {
   let dayInfoContent = ``;

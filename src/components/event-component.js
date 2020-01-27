@@ -1,6 +1,6 @@
-import {formatTime, getDuration} from "../utils/common";
-import AbstractComponent from "./abstract-component";
-import {groupTypeToPreposition, typeToGroup} from "../const";
+import {formatTime, getDuration} from '../utils/common';
+import AbstractComponent from './abstract-component';
+import {groupTypeToPreposition, typeToGroup} from '../const';
 
 const MAX_SHOWING_OFFER = 3;
 

@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component";
+import AbstractComponent from './abstract-component';
 
 const HIDDEN_ELEMENT_CLASS = `trip-events--hidden`;
 
