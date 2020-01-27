@@ -21,6 +21,7 @@ export default class TripController {
     this._api = api;
 
     this._pointControllers = [];
+    this._creatingEventController = null;
     this._backEndStaticData = {
       destinations: [],
       typeToOffers: new Map(),
@@ -168,7 +169,7 @@ export default class TripController {
     this._tripInfoCostComponent.rerender(this._eventsModel.getSortingDateEvents());
   }
 
-  _onDataChange(pointController, oldEvent, newEventAdapterModel) {
+  _onDataChange(pointController, oldEvent, newEventAdapterModel, isDoUpdateEvents = true) {
     if (oldEvent === EmptyEvent) {
       this._creatingEventController = null;
       if (newEventAdapterModel === null) {
@@ -207,7 +208,9 @@ export default class TripController {
           const isSuccess = this._eventsModel.updateEvent(oldEvent.id, eventAdapterModel);
           if (isSuccess) {
             pointController.render(eventAdapterModel, Mode.DEFAULT, this._backEndStaticData);
-            this._updateEvents();
+            if (isDoUpdateEvents) {
+              this._updateEvents();
+            }
           }
         })
         .catch(() => {
@@ -217,6 +220,10 @@ export default class TripController {
   }
 
   _onViewChange() {
+    if (this._creatingEventController) {
+      this._creatingEventController.destroy();
+      this._creatingEventController = null;
+    }
     this._pointControllers.forEach((it) => it.setDefaultView());
   }
 

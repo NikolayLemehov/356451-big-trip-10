@@ -44,11 +44,19 @@ export default class PointController {
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     });
 
-    this._eventEditComponent.setFavoriteToggleHandler(() => {
+    this._eventEditComponent.setCancelButtonClickHandler(() => {
+      this._onDataChange(this, EmptyEvent, null);
+    });
+
+    this._eventEditComponent.setFavoriteToggleHandler((isChange) => {
+      if (!isChange) {
+        return;
+      }
       this._eventEditComponent.disableFavorite();
       const newEventAdapterModel = EventAdapterModel.clone(eventAdapterModel);
       newEventAdapterModel.isFavorite = !newEventAdapterModel.isFavorite;
-      this._onDataChange(this, eventAdapterModel, newEventAdapterModel);
+      const isDoUpdateEvents = false;
+      this._onDataChange(this, eventAdapterModel, newEventAdapterModel, isDoUpdateEvents);
     });
 
     this._eventEditComponent.setSubmitHandler((evt) => {

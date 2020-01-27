@@ -1,4 +1,4 @@
-import API from "./api";
+import Index from "./api";
 import SiteMenuTitleComponent from "./components/site-menu-title-component";
 import SiteMenuComponent from "./components/site-menu-component";
 import TripMainEventAddBtnComponent from "./components/trip-main-event-add-btn-component";
@@ -10,12 +10,29 @@ import {MenuName, menuNames} from "./const";
 import {renderElement} from "./utils/render";
 import EventsModel from "./models/events-model";
 import EventAdapterModel from "./models/event-adapter-model";
+import Store from "./api/store";
+import Provider from "./api/provider";
 import 'flatpickr/dist/flatpickr.css';
 
+const STORE_PREFIX = `big-trip-localstorage`;
+const STORE_VER = `v1`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 const AUTHORIZATION = `Basic 6PZAz5uh8iB4RIAL336X`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/big-trip`;
-const api = new API(END_POINT, AUTHORIZATION);
 
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`)
+    .then(() => {
+      document.title += `[SW]`;
+    })
+    .catch(() => {
+      document.title += `[no SW]`;
+    });
+});
+
+const api = new Index(END_POINT, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 const eventsModel = new EventsModel();
 
 const tripMainElement = document.querySelector(`.trip-main`);
@@ -40,7 +57,7 @@ const statisticsComponent = new StatisticsComponent(eventsModel);
 renderElement(pageBodyContainerElement, tripEventsComponent);
 renderElement(pageBodyContainerElement, statisticsComponent);
 
-const tripController = new TripController(tripEventsComponent, tripInfoElement, eventsModel, api);
+const tripController = new TripController(tripEventsComponent, tripInfoElement, eventsModel, apiWithProvider);
 statisticsComponent.hide();
 
 tripMainEventAddBtnComponent.setAddButtonClickHandler(() => {
@@ -62,11 +79,10 @@ siteMenuComponent.setChangeHandler((menuName) => {
       statisticsComponent.show();
   }
 });
-
 Promise.all([
-  api.getOffers().then((offerAdapterModel) => offerAdapterModel),
-  api.getDestinations().then((destinationAdapterModel) => destinationAdapterModel),
-  api.getPoints().then((eventAdapterModels) => eventAdapterModels),
+  apiWithProvider.getOffers().then((offerAdapterModel) => offerAdapterModel),
+  apiWithProvider.getDestinations().then((destinationAdapterModel) => destinationAdapterModel),
+  apiWithProvider.getPoints().then((eventAdapterModels) => eventAdapterModels),
 ]).then(([offerAdapterModel, destinationAdapterModel, eventAdapterModels]) => {
   eventsModel.setDestinations(destinationAdapterModel.destinations);
   eventsModel.setTypeToOffers(offerAdapterModel.typeToOffers);
@@ -77,4 +93,19 @@ Promise.all([
 
   filterController.render();
   tripController.render();
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+  if (!apiWithProvider.getSynchronize()) {
+    apiWithProvider.sync()
+      .then(() => {
+      })
+      .catch(() => {
+      });
+  }
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
 });

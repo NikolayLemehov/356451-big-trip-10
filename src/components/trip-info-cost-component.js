@@ -1,7 +1,8 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 
 const createTripInfoTemplate = (events) => {
-  const totalCost = events.reduce((total, event) => total + event.price, 0);
+  const totalCost = events.reduce((total, event) => total + event.price + event.offers
+    .reduce((acc, offer) => offer.isChecked ? acc + offer.price : acc, 0), 0);
 
   return (
     `<p class="trip-info__cost">

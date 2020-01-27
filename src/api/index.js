@@ -1,6 +1,6 @@
-import EventAdapterModel from "./models/event-adapter-model";
-import DestinationAdapterModel from "./models/destination-adapter-model";
-import OffersAdapterModel from "./models/offer-adapter-model";
+import EventAdapterModel from "../models/event-adapter-model";
+import DestinationAdapterModel from "../models/destination-adapter-model";
+import OffersAdapterModel from "../models/offer-adapter-model";
 
 const Method = {
   GET: `GET`,
@@ -17,7 +17,7 @@ const checkStatus = (response) => {
   }
 };
 
-export default class API {
+export default class Index {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
     this._authorization = authorization;
@@ -65,6 +65,16 @@ export default class API {
     return this._load({url: `offers`})
       .then((response) => response.json())
       .then(OffersAdapterModel.parseOffers);
+  }
+
+  sync(data) {
+    return this._load({
+      url: `points/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({'Content-Type': `application/json`}),
+    })
+      .then((response) => response.json());
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
