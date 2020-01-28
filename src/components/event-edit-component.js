@@ -350,7 +350,6 @@ export default class EventEditComponent extends AbstractSmartComponent {
           element.querySelector(`.event__section--destination`).remove();
         }
         this._hasDestination = false;
-        element.querySelector(`.event__section--destination`).remove();
       }
     });
   }
