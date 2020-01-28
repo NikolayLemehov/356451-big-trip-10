@@ -9,6 +9,7 @@ export default class EventsModel {
     this._destinations = [];
     this._typeToOffers = new Map();
     this._filterChangeHandlers = [];
+    this._dataChangeHandlers = [];
   }
 
   setEvents(eventAdapterModels) {
@@ -27,6 +28,7 @@ export default class EventsModel {
     }
 
     this._eventAdapterModels = [].concat(this._eventAdapterModels.slice(0, index), eventAdapterModel, this._eventAdapterModels.slice(index + 1));
+    this._callHandlers(this._dataChangeHandlers);
 
     return true;
   }
@@ -54,13 +56,16 @@ export default class EventsModel {
 
   addEvent(eventAdapterModel) {
     this._eventAdapterModels = [].concat(eventAdapterModel, this._eventAdapterModels);
+    this._callHandlers(this._dataChangeHandlers);
   }
 
   getFilters() {
+    const nowDate = new Date();
     return Object.values(FilterType).map((filterType) => {
       return {
         name: filterType,
         isChecked: filterType === this._activeFilterType,
+        isAvailable: this._getAvailabilityBtnByFilter(filterType, nowDate),
       };
     });
   }
@@ -72,6 +77,10 @@ export default class EventsModel {
 
   setFilterChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
+  }
+
+  setDataChangeHandler(handler) {
+    this._dataChangeHandlers.push(handler);
   }
 
   getSorts() {
@@ -110,5 +119,17 @@ export default class EventsModel {
 
   _callHandlers(handlers) {
     handlers.forEach((handler) => handler());
+  }
+
+  _getAvailabilityBtnByFilter(filterType, nowDate) {
+    switch (filterType) {
+      case FilterType.EVERYTHING:
+        return this._eventAdapterModels.some((it) => !!it);
+      case FilterType.FUTURE:
+        return this._eventAdapterModels.some((it) => it.date.start > nowDate);
+      case FilterType.PAST:
+        return this._eventAdapterModels.some((it) => it.date.start <= nowDate);
+    }
+    return false;
   }
 }
