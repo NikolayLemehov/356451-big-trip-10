@@ -41,9 +41,9 @@ export default class EventsModel {
       case FilterType.EVERYTHING:
         return this.getSortingDateEvents();
       case FilterType.FUTURE:
-        return this._eventAdapterModels.filter((it) => it.date.start > nowDate);
+        return this.getSortingDateEvents().filter((it) => it.date.start > nowDate);
       case FilterType.PAST:
-        return this._eventAdapterModels.filter((it) => it.date.start <= nowDate);
+        return this.getSortingDateEvents().filter((it) => it.date.start <= nowDate);
     }
     return false;
   }
