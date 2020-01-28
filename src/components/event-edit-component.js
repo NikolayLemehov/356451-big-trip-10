@@ -169,9 +169,6 @@ export default class EventEditComponent extends AbstractSmartComponent {
     this._offers = event.offers;
     this._hasDestination = !!event.destination.description && event.destination.photos.length > 0;
 
-    this._saveBtnElement = this.getElement().querySelector(`.event__save-btn`);
-    this._deleteBtnElement = this.getElement().querySelector(`.event__reset-btn--delete`);
-    this._favoriteBtnElement = this.getElement().querySelector(`.event__favorite-checkbox`);
     this._submitHandler = null;
     this._deleteButtonClickHandler = null;
     this._rollupButtonClickHandler = null;
@@ -180,6 +177,20 @@ export default class EventEditComponent extends AbstractSmartComponent {
 
     this._applyFlatpickr();
     this._subscribeOnEvents();
+  }
+
+  getElement() {
+    this._element = super.getElement();
+
+    this._formElement = {
+      saveBtn: this._element.querySelector(`.event__save-btn`),
+      deleteBtn: this._element.querySelector(`.event__reset-btn--delete`),
+      favoriteBtn: this._element.querySelector(`.event__favorite-checkbox`),
+      destinationInput: this._element.querySelector(`.event__input--destination`),
+      typeInput: this._element.querySelector(`.event__type-toggle`),
+      priceInput: this._element.querySelector(`.event__input--price`),
+    };
+    return this._element;
   }
 
   getTemplate() {
@@ -199,7 +210,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
     this._subscribeOnEvents();
   }
 
-  rerender(onFocusElement) {
+  rerender(onFocusElement = null) {
     super.rerender();
 
     this._applyFlatpickr();
@@ -219,12 +230,12 @@ export default class EventEditComponent extends AbstractSmartComponent {
   }
 
   setSubmitHandler(handler) {
-    this.getElement().addEventListener(`submit`, handler);
+    this._formElement.saveBtn.addEventListener(`click`, handler);
     this._submitHandler = handler;
   }
 
   setDeleteButtonClickHandler(handler) {
-    this._deleteBtnElement.addEventListener(`click`, handler);
+    this._formElement.deleteBtn.addEventListener(`click`, handler);
     this._deleteButtonClickHandler = handler;
   }
 
@@ -241,8 +252,8 @@ export default class EventEditComponent extends AbstractSmartComponent {
   setFavoriteToggleHandler(handler) {
     const debounceHandler = debounce(handler, DEBOUNCE_DELAY);
 
-    this._favoriteBtnElement.addEventListener(`click`, () => {
-      debounceHandler(this._isFavorite !== this._favoriteBtnElement.checked);
+    this._formElement.favoriteBtn.addEventListener(`click`, () => {
+      debounceHandler(this._isFavorite !== this._formElement.favoriteBtn.checked);
     });
   }
 
@@ -257,27 +268,27 @@ export default class EventEditComponent extends AbstractSmartComponent {
   }
 
   disableFavorite() {
-    this._favoriteBtnElement.disabled = `disabled`;
+    this._formElement.favoriteBtn.disabled = `disabled`;
   }
 
   disableSave() {
-    this._saveBtnElement.disabled = `disabled`;
-    this._saveBtnElement.textContent = `Saving...`;
+    this._formElement.favoriteBtn.disabled = `disabled`;
+    this._formElement.favoriteBtn.textContent = `Saving...`;
   }
 
   activeSave() {
-    this._saveBtnElement.disabled = ``;
-    this._saveBtnElement.textContent = `Save`;
+    this._formElement.saveBtn.disabled = ``;
+    this._formElement.saveBtn.textContent = `Save`;
   }
 
   disableDelete() {
-    this._deleteBtnElement.disabled = `disabled`;
-    this._deleteBtnElement.textContent = `Deleting...`;
+    this._formElement.deleteBtn.disabled = `disabled`;
+    this._formElement.deleteBtn.textContent = `Deleting...`;
   }
 
   activeDelete() {
-    this._deleteBtnElement.disabled = ``;
-    this._deleteBtnElement.textContent = `Delete`;
+    this._formElement.deleteBtn.disabled = ``;
+    this._formElement.deleteBtn.textContent = `Delete`;
   }
 
   activateWarningFrame() {
@@ -352,5 +363,32 @@ export default class EventEditComponent extends AbstractSmartComponent {
         this._hasDestination = false;
       }
     });
+    this.validateForm();
+  }
+
+  validateForm(formElement = this.getElement()) {
+    const formData = new FormData(formElement);
+    this._validateDestination();
+    this._validateType(formData);
+    this._validatePrice(formData);
+  }
+
+  _validateDestination() {
+    const destinationName = this._formElement.destinationInput.value;
+    const isValidDestinationName = this._destinations.some((it) => it.city === destinationName);
+    this._formElement.destinationInput.setCustomValidity(isValidDestinationName ? ``
+      : `Please select a destination from the list`);
+  }
+
+  _validateType(formData) {
+    const eventType = formData.get(`event-type`);
+    this._formElement.typeInput.setCustomValidity(eventType ? ``
+      : `Please select a type from the list`);
+  }
+
+  _validatePrice(formData) {
+    const eventPrice = Number(formData.get(`event-price`));
+    this._formElement.priceInput.setCustomValidity(eventPrice ? ``
+      : `Please enter a price`);
   }
 }

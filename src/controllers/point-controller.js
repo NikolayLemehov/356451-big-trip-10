@@ -26,9 +26,9 @@ export default class PointController {
     const oldEventComponent = this._eventComponent;
     const oldEventEditComponent = this._eventEditComponent;
     this._mode = mode;
-
     this._eventComponent = new EventComponent(eventAdapterModel);
     this._eventEditComponent = new EventEditComponent(eventAdapterModel, backEndStaticData);
+
 
     this._eventComponent.setEditButtonClickHandler(() => {
       this._replaceEventToEdit();
@@ -60,11 +60,14 @@ export default class PointController {
     });
 
     this._eventEditComponent.setSubmitHandler((evt) => {
-      evt.preventDefault();
-      const componentData = this._eventEditComponent.getData();
-      this._eventEditComponent.disableSave();
-      const newEventAdapterModel = this._parseFormData(componentData, eventAdapterModel);
-      this._onDataChange(this, eventAdapterModel, newEventAdapterModel);
+      this._eventEditComponent.validateForm();
+      if (this._eventEditComponent.getElement().checkValidity()) {
+        evt.preventDefault();
+        const componentData = this._eventEditComponent.getData();
+        this._eventEditComponent.disableSave();
+        const newEventAdapterModel = this._parseFormData(componentData, eventAdapterModel);
+        this._onDataChange(this, eventAdapterModel, newEventAdapterModel);
+      }
     });
 
     this._eventEditComponent.setDeleteButtonClickHandler((evt) => {
