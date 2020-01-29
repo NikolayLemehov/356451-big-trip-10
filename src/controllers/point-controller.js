@@ -52,7 +52,7 @@ export default class PointController {
       if (!isChange) {
         return;
       }
-      this._eventEditComponent.disableFavorite();
+      this._eventEditComponent.disableForm();
       const newEventAdapterModel = EventAdapterModel.clone(eventAdapterModel);
       newEventAdapterModel.isFavorite = !newEventAdapterModel.isFavorite;
       const isDoUpdateEvents = false;
@@ -65,6 +65,7 @@ export default class PointController {
         evt.preventDefault();
         const componentData = this._eventEditComponent.getData();
         this._eventEditComponent.disableSave();
+        this._eventEditComponent.disableForm();
         const newEventAdapterModel = this._parseFormData(componentData, eventAdapterModel);
         this._onDataChange(this, eventAdapterModel, newEventAdapterModel);
       }
@@ -73,6 +74,7 @@ export default class PointController {
     this._eventEditComponent.setDeleteButtonClickHandler((evt) => {
       evt.preventDefault();
       this._eventEditComponent.disableDelete();
+      this._eventEditComponent.disableForm();
       this._onDataChange(this, eventAdapterModel, null);
     });
 
@@ -111,6 +113,7 @@ export default class PointController {
     const animate = () => {
       this._eventEditComponent.activeSave();
       this._eventEditComponent.activeDelete();
+      this._eventEditComponent.activeForm();
 
       this._eventEditComponent.activateWarningFrame();
 

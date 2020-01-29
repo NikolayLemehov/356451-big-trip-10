@@ -270,27 +270,32 @@ export default class EventEditComponent extends AbstractSmartComponent {
     this._cancelButtonClickHandler = handler;
   }
 
-  disableFavorite() {
-    this._formElement.favoriteBtn.disabled = `disabled`;
+  disableForm() {
+    Array.from(this.getElement().elements).forEach((it) => {
+      it.disabled = `disabled`;
+    });
+  }
+
+  activeForm() {
+    this.getElement().classList.remove(`event--blocked`);
+    Array.from(this.getElement().elements).forEach((it) => {
+      it.disabled = ``;
+    });
   }
 
   disableSave() {
-    this._formElement.favoriteBtn.disabled = `disabled`;
-    this._formElement.favoriteBtn.textContent = `Saving...`;
+    this._formElement.saveBtn.textContent = `Saving...`;
   }
 
   activeSave() {
-    this._formElement.saveBtn.disabled = ``;
     this._formElement.saveBtn.textContent = `Save`;
   }
 
   disableDelete() {
-    this._formElement.deleteBtn.disabled = `disabled`;
     this._formElement.deleteBtn.textContent = `Deleting...`;
   }
 
   activeDelete() {
-    this._formElement.deleteBtn.disabled = ``;
     this._formElement.deleteBtn.textContent = `Delete`;
   }
 
