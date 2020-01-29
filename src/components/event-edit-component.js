@@ -421,7 +421,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
 
   _validatePrice(formData) {
     const eventPrice = Number(formData.get(`event-price`));
-    this._formElement.priceInput.setCustomValidity(eventPrice ? ``
-      : `Please enter a price`);
+    this._formElement.priceInput.setCustomValidity((Math.trunc(eventPrice) - eventPrice) === 0 && eventPrice > 0 ? ``
+      : `Please fill in the price with a positive integer`);
   }
 }
