@@ -1,6 +1,6 @@
-import {renderElement, replaceElement} from "../utils/render";
-import FilterListComponent from "../components/filter-list-component";
-import FilterListTitleComponent from "../components/filter-list-title-component";
+import {renderElement, replaceElement} from '../utils/render';
+import FilterListComponent from '../components/filter-list-component';
+import FilterListTitleComponent from '../components/filter-list-title-component';
 
 export default class FilterController {
   constructor(container, eventsModel) {
@@ -10,8 +10,11 @@ export default class FilterController {
 
     this._filterListComponent = null;
 
+    this._onDataChange = this._onDataChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
     renderElement(this._container, this._filterListTitleComponent);
+
+    this._eventsModel.setDataChangeHandler(this._onDataChange);
   }
 
   render() {
@@ -39,5 +42,9 @@ export default class FilterController {
 
   _onFilterChange(filterType) {
     this._eventsModel.setFilter(filterType);
+  }
+
+  _onDataChange() {
+    this.render();
   }
 }

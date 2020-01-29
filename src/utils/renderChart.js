@@ -1,7 +1,7 @@
-import Chart from "chart.js";
-import moment from "moment";
-import {EURO_SYMBOL, GroupType, Statistic, typeToGroup} from "../const";
-import ChartDataLabels from "chartjs-plugin-datalabels";
+import Chart from 'chart.js';
+import moment from 'moment';
+import {EURO_SYMBOL, GroupType, Statistic, typeToGroup} from '../const';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 class DefaultChartConfig {
   static get() {
@@ -11,7 +11,7 @@ class DefaultChartConfig {
       data: {
         datasets: [{
           backgroundColor: `white`,
-        }]
+        }],
       },
       options: {
         title: {
@@ -45,7 +45,7 @@ class DefaultChartConfig {
           datalabels: {
             align: `start`,
             anchor: `end`,
-          }
+          },
         },
       },
     };

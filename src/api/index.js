@@ -1,12 +1,12 @@
-import EventAdapterModel from "../models/event-adapter-model";
-import DestinationAdapterModel from "../models/destination-adapter-model";
-import OffersAdapterModel from "../models/offer-adapter-model";
+import EventAdapterModel from '../models/event-adapter-model';
+import DestinationAdapterModel from '../models/destination-adapter-model';
+import OffersAdapterModel from '../models/offer-adapter-model';
 
 const Method = {
   GET: `GET`,
   POST: `POST`,
   PUT: `PUT`,
-  DELETE: `DELETE`
+  DELETE: `DELETE`,
 };
 
 const checkStatus = (response) => {
@@ -34,7 +34,7 @@ export default class Index {
       url: `points`,
       method: Method.POST,
       body: JSON.stringify(eventAdapterModel.getRAW()),
-      headers: new Headers({'Content-Type': `application/json`})
+      headers: new Headers({'Content-Type': `application/json`}),
     })
       .then((response) => response.json())
       .then(EventAdapterModel.parseEvent);
@@ -45,7 +45,7 @@ export default class Index {
       url: `points/${id}`,
       method: Method.PUT,
       body: JSON.stringify(eventAdapterModel.getRAW()),
-      headers: new Headers({'Content-Type': `application/json`})
+      headers: new Headers({'Content-Type': `application/json`}),
     })
       .then((response) => response.json())
       .then(EventAdapterModel.parseEvent);

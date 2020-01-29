@@ -1,9 +1,9 @@
-import moment from "moment";
-import EventComponent from "../components/event-component";
-import EventEditComponent from "../components/event-edit-component";
-import EventAdapterModel from "../models/event-adapter-model";
-import {removeElement, renderElement, RenderPosition, replaceElement} from "../utils/render";
-import {EmptyEvent, Mode} from "../const";
+import moment from 'moment';
+import EventComponent from '../components/event-component';
+import EventEditComponent from '../components/event-edit-component';
+import EventAdapterModel from '../models/event-adapter-model';
+import {removeElement, renderElement, RenderPosition, replaceElement} from '../utils/render';
+import {EmptyEvent, Mode} from '../const';
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
 
@@ -26,9 +26,9 @@ export default class PointController {
     const oldEventComponent = this._eventComponent;
     const oldEventEditComponent = this._eventEditComponent;
     this._mode = mode;
-
     this._eventComponent = new EventComponent(eventAdapterModel);
     this._eventEditComponent = new EventEditComponent(eventAdapterModel, backEndStaticData);
+
 
     this._eventComponent.setEditButtonClickHandler(() => {
       this._replaceEventToEdit();
@@ -49,10 +49,10 @@ export default class PointController {
     });
 
     this._eventEditComponent.setFavoriteToggleHandler((isChange) => {
-      if (!isChange) {
+      if (!isChange || eventAdapterModel.isNewEvent) {
         return;
       }
-      this._eventEditComponent.disableFavorite();
+      this._eventEditComponent.disableForm();
       const newEventAdapterModel = EventAdapterModel.clone(eventAdapterModel);
       newEventAdapterModel.isFavorite = !newEventAdapterModel.isFavorite;
       const isDoUpdateEvents = false;
@@ -60,16 +60,21 @@ export default class PointController {
     });
 
     this._eventEditComponent.setSubmitHandler((evt) => {
-      evt.preventDefault();
-      const componentData = this._eventEditComponent.getData();
-      this._eventEditComponent.disableSave();
-      const newEventAdapterModel = this._parseFormData(componentData, eventAdapterModel);
-      this._onDataChange(this, eventAdapterModel, newEventAdapterModel);
+      this._eventEditComponent.validateForm();
+      if (this._eventEditComponent.getElement().checkValidity()) {
+        evt.preventDefault();
+        const componentData = this._eventEditComponent.getData();
+        this._eventEditComponent.disableSave();
+        this._eventEditComponent.disableForm();
+        const newEventAdapterModel = this._parseFormData(componentData, eventAdapterModel);
+        this._onDataChange(this, eventAdapterModel, newEventAdapterModel);
+      }
     });
 
     this._eventEditComponent.setDeleteButtonClickHandler((evt) => {
       evt.preventDefault();
       this._eventEditComponent.disableDelete();
+      this._eventEditComponent.disableForm();
       this._onDataChange(this, eventAdapterModel, null);
     });
 
@@ -108,6 +113,7 @@ export default class PointController {
     const animate = () => {
       this._eventEditComponent.activeSave();
       this._eventEditComponent.activeDelete();
+      this._eventEditComponent.activeForm();
 
       this._eventEditComponent.activateWarningFrame();
 
@@ -140,7 +146,7 @@ export default class PointController {
         }),
       },
       'base_price': formData.get(`event-price`),
-      'is_favorite': eventAdapterModel.isFavorite,
+      'is_favorite': !!formData.get(`event-favorite`),
       'offers': offers.filter((it) => it.isChecked).map((it) => {
         return {
           'title': it.title,

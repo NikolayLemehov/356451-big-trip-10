@@ -1,8 +1,8 @@
-import AbstractComponent from "./abstract-component";
+import AbstractComponent from './abstract-component';
 
 const FILTER_ID_PREFIX = `filter-`;
 
-const createFilterTemplate = ({name, isChecked}) => {
+const createFilterTemplate = ({name, isChecked, isAvailable}) => {
   return (
     `<div class="trip-filters__filter">
       <input
@@ -12,6 +12,7 @@ const createFilterTemplate = ({name, isChecked}) => {
       name="trip-filter"
       value="${name}"
       ${isChecked ? `checked` : ``}
+      ${isAvailable ? `` : `disabled`}
       >
       <label class="trip-filters__filter-label" for="filter-${name}">${name}</label>
     </div>`

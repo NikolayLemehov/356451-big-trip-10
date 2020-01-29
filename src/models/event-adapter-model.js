@@ -78,6 +78,7 @@ export default class EventAdapterModel {
   static parseEvents(endData) {
     return endData.map(EventAdapterModel.parseEvent);
   }
+
   static clone(eventAdapterModel) {
     return new EventAdapterModel(eventAdapterModel.getRAW());
   }

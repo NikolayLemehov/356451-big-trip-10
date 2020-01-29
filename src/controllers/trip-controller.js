@@ -1,16 +1,16 @@
-import EmptyComponent from "../components/empty-component";
-import TripInfoMainComponent from "../components/trip-info-main-component";
-import TripInfoCostComponent from "../components/trip-info-cost-component";
-import TripDaysComponent from "../components/trip-days-component";
-import TripEventsListComponent from "../components/trip-events-list-component";
-import TripSortComponent from "../components/trip-sort-component";
-import DayInfoComponent from "../components/day-info-component";
-import TripDaysItemComponent from "../components/trip-days-item-component";
-import PointController from "./point-controller";
-import EventAdapterModel from "../models/event-adapter-model";
-import {renderElement, RenderPosition} from "../utils/render";
-import {formatDate, getExactDate} from "../utils/common";
-import {EmptyEvent, MILLISECONDS_PER_DAY, Mode, SortType} from "../const";
+import EmptyComponent from '../components/empty-component';
+import TripInfoMainComponent from '../components/trip-info-main-component';
+import TripInfoCostComponent from '../components/trip-info-cost-component';
+import TripDaysComponent from '../components/trip-days-component';
+import TripEventsListComponent from '../components/trip-events-list-component';
+import TripSortComponent from '../components/trip-sort-component';
+import DayInfoComponent from '../components/day-info-component';
+import TripDaysItemComponent from '../components/trip-days-item-component';
+import PointController from './point-controller';
+import EventAdapterModel from '../models/event-adapter-model';
+import {renderElement, RenderPosition} from '../utils/render';
+import {formatDate, getExactDate} from '../utils/common';
+import {EmptyEvent, MILLISECONDS_PER_DAY, Mode, SortType} from '../const';
 
 export default class TripController {
   constructor(containerComponent, tripInfoElement, eventsModel, api) {
@@ -28,6 +28,7 @@ export default class TripController {
     };
     this._tripInfoMainComponent = null;
     this._tripInfoCostComponent = null;
+    this._tripMainEventAddBtnComponent = null;
 
     this._tripSortComponent = new TripSortComponent(this._eventsModel.getSorts());
     this._tripDaysComponent = new TripDaysComponent();
@@ -63,7 +64,8 @@ export default class TripController {
     this._renderEvents();
   }
 
-  createEvent() {
+  createEvent(tripMainEventAddBtnComponent) {
+    this._tripMainEventAddBtnComponent = tripMainEventAddBtnComponent;
     if (this._creatingEventController) {
       return;
     }
@@ -172,11 +174,14 @@ export default class TripController {
   _onDataChange(pointController, oldEvent, newEventAdapterModel, isDoUpdateEvents = true) {
     if (oldEvent === EmptyEvent) {
       this._creatingEventController = null;
+      this._tripMainEventAddBtnComponent.activeBtn();
       if (newEventAdapterModel === null) {
         pointController.destroy();
       } else {
         this._api.createPoint(newEventAdapterModel)
           .then((eventAdapterModel) => {
+            const typeToOffers = this._eventsModel.getTypeToOffers();
+            eventAdapterModel = EventAdapterModel.replenishOffers(typeToOffers.get(eventAdapterModel.type), eventAdapterModel);
             this._eventsModel.addEvent(eventAdapterModel);
             pointController.render(eventAdapterModel, Mode.DEFAULT, this._backEndStaticData);
 
@@ -220,6 +225,9 @@ export default class TripController {
   }
 
   _onViewChange() {
+    if (this._tripMainEventAddBtnComponent) {
+      this._tripMainEventAddBtnComponent.activeBtn();
+    }
     if (this._creatingEventController) {
       this._creatingEventController.destroy();
       this._creatingEventController = null;

@@ -1,6 +1,7 @@
-import {formatTime, getDuration} from "../utils/common";
-import AbstractComponent from "./abstract-component";
-import {groupTypeToPreposition, typeToGroup} from "../const";
+import he from 'he';
+import {formatTime, getDuration} from '../utils/common';
+import AbstractComponent from './abstract-component';
+import {groupTypeToPreposition, typeToGroup} from '../const';
 
 const MAX_SHOWING_OFFER = 3;
 
@@ -17,8 +18,13 @@ const createOffersTemplate = (offers) => offers.filter((it) => it.isChecked).sli
   .join(``);
 
 const createEventTemplate = (event) => {
-  const {id, type, date, price, offers, destination} = event;
-  const duration = getDuration(date.start, date.end);
+  const {type, date, price: notSanitizedPrice, offers, destination} = event;
+  const price = he.encode(String(notSanitizedPrice));
+  const startJSONDate = date.start ? date.start.toJSON() : ``;
+  const endJSONDate = date.end ? date.end.toJSON() : ``;
+  const startFormattedDate = date.start ? formatTime(date.start) : ``;
+  const endFormattedDate = date.end ? formatTime(date.end) : ``;
+  const duration = date.start && date.end ? getDuration(date.start, date.end) : ``;
   const preposition = groupTypeToPreposition.get(typeToGroup.get(type));
 
   return (
@@ -27,13 +33,13 @@ const createEventTemplate = (event) => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${id} ${type} ${preposition} ${destination.city}</h3>
+        <h3 class="event__title">${type} ${preposition} ${he.encode(destination.city)}</h3>
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${date.start.toJSON()}">${formatTime(date.start)}</time>
+            <time class="event__start-time" datetime="${startJSONDate}">${startFormattedDate}</time>
             &mdash;
-            <time class="event__end-time" datetime="${date.end.toJSON()}">${formatTime(date.end)}</time>
+            <time class="event__end-time" datetime="${endJSONDate}">${endFormattedDate}</time>
           </p>
           <p class="event__duration">${duration}</p>
         </div>

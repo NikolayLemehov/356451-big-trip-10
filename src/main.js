@@ -61,7 +61,8 @@ const tripController = new TripController(tripEventsComponent, tripInfoElement, 
 statisticsComponent.hide();
 
 tripMainEventAddBtnComponent.setAddButtonClickHandler(() => {
-  tripController.createEvent();
+  tripController.createEvent(tripMainEventAddBtnComponent);
+  tripMainEventAddBtnComponent.disableBtn();
 });
 
 siteMenuComponent.setChangeHandler((menuName) => {
@@ -109,4 +110,3 @@ window.addEventListener(`online`, () => {
 window.addEventListener(`offline`, () => {
   document.title += ` [offline]`;
 });
-

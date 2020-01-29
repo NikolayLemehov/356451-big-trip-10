@@ -1,4 +1,4 @@
-import {StoreId} from "./provider";
+import {StoreId} from './provider';
 
 export default class Store {
   constructor(storeKey, localStorage) {

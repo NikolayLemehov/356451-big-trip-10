@@ -1,6 +1,6 @@
-import AbstractSmartComponent from "./abstract-smart-component";
-import {renderMoneyChart, renderTimeSpendChart, renderTransportChart} from "../utils/renderChart";
-import {Statistic} from "../const";
+import AbstractSmartComponent from './abstract-smart-component';
+import {renderMoneyChart, renderTimeSpendChart, renderTransportChart} from '../utils/renderChart';
+import {Statistic} from '../const';
 
 const createStatisticTemplate = (diagramType) => {
   return (
