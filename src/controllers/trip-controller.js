@@ -223,7 +223,9 @@ export default class TripController {
   }
 
   _onViewChange() {
-    this._tripMainEventAddBtnComponent.activeBtn();
+    if (this._tripMainEventAddBtnComponent) {
+      this._tripMainEventAddBtnComponent.activeBtn();
+    }
     if (this._creatingEventController) {
       this._creatingEventController.destroy();
       this._creatingEventController = null;

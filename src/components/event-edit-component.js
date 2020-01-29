@@ -52,8 +52,8 @@ const createEditEventTemplate = (event, destinations, option) => {
   const {type, destination, offers, hasDestination} = option;
 
   const price = he.encode(String(notSanitizedPrice));
-  const startDate = `${formatDate(date.start)} ${formatTime(date.start)}`;
-  const endDate = `${formatDate(date.end)} ${formatTime(date.end)}`;
+  const startDate = date.start ? `${formatDate(date.start)} ${formatTime(date.start)}` : ``;
+  const endDate = date.start ? `${formatDate(date.end)} ${formatTime(date.end)}` : ``;
   const preposition = groupTypeToPreposition.get(typeToGroup.get(type));
 
   const offersMarkUp = offers.length > 0 ? offers.map((it) => createOfferTemplate(it)).join(``) : ``;
@@ -94,14 +94,14 @@ const createEditEventTemplate = (event, destinations, option) => {
           <label class="visually-hidden" for="event-start-time-1">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time"
-            value="${startDate}">
+          <input class="event__input  event__input--time event__input--time--start" id="event-start-time-1" type="text" name="event-start-time"
+            value="${startDate}" required>
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time"
-            value="${endDate}">
+          <input class="event__input  event__input--time event__input--time--end" id="event-end-time-1" type="text" name="event-end-time"
+            value="${endDate}" required>
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -326,8 +326,8 @@ export default class EventEditComponent extends AbstractSmartComponent {
 
     const startDateElement = this.getElement().querySelector(`#event-${DateType.START}-time-1`);
     const endDateElement = this.getElement().querySelector(`#event-${DateType.END}-time-1`);
-    let startValue = startDateElement.value;
-    let endValue = endDateElement.value;
+    let startValue = startDateElement.value ? startDateElement.value : null;
+    let endValue = endDateElement.value ? endDateElement.value : null;
 
     this._startFlatpickr = flatpickr(startDateElement, {
       altInput: true,
@@ -337,13 +337,13 @@ export default class EventEditComponent extends AbstractSmartComponent {
       enableTime: true,
       // eslint-disable-next-line camelcase
       time_24hr: true,
-      defaultDate: this._event.date[DateType.START] === null ? new Date() : this._event.date[DateType.START],
-      maxDate: moment(endValue, MOMENT_DATE_FORMAT).subtract(1, `minute`).format(MOMENT_DATE_FORMAT),
       onChange(selectedDates, dateStr, instance) {
         startValue = moment(instance.selectedDates[0]).add(1, `minute`).format(MOMENT_DATE_FORMAT);
       },
       onOpen(selectedDates, dateStr, instance) {
-        instance.config.maxDate = endValue;
+        if (endValue) {
+          instance.config.maxDate = endValue;
+        }
       },
     });
 
@@ -355,13 +355,13 @@ export default class EventEditComponent extends AbstractSmartComponent {
       enableTime: true,
       // eslint-disable-next-line camelcase
       time_24hr: true,
-      defaultDate: this._event.date[DateType.END] === null ? new Date() : this._event.date[DateType.END],
-      minDate: moment(startValue, MOMENT_DATE_FORMAT).add(1, `minute`).format(MOMENT_DATE_FORMAT),
       onChange(selectedDates, dateStr, instance) {
         endValue = moment(instance.selectedDates[0]).subtract(1, `minute`).format(MOMENT_DATE_FORMAT);
       },
       onOpen(selectedDates, dateStr, instance) {
-        instance.config.minDate = startValue;
+        if (startValue) {
+          instance.config.minDate = startValue;
+        }
       },
     });
   }

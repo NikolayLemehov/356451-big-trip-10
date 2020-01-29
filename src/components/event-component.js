@@ -20,7 +20,11 @@ const createOffersTemplate = (offers) => offers.filter((it) => it.isChecked).sli
 const createEventTemplate = (event) => {
   const {type, date, price: notSanitizedPrice, offers, destination} = event;
   const price = he.encode(String(notSanitizedPrice));
-  const duration = getDuration(date.start, date.end);
+  const startJSONDate = date.start ? date.start.toJSON() : ``;
+  const endJSONDate = date.end ? date.end.toJSON() : ``;
+  const startFormattedDate = date.start ? formatTime(date.start) : ``;
+  const endFormattedDate = date.end ? formatTime(date.end) : ``;
+  const duration = date.start && date.end ? getDuration(date.start, date.end) : ``;
   const preposition = groupTypeToPreposition.get(typeToGroup.get(type));
 
   return (
@@ -33,9 +37,9 @@ const createEventTemplate = (event) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${date.start.toJSON()}">${formatTime(date.start)}</time>
+            <time class="event__start-time" datetime="${startJSONDate}">${startFormattedDate}</time>
             &mdash;
-            <time class="event__end-time" datetime="${date.end.toJSON()}">${formatTime(date.end)}</time>
+            <time class="event__end-time" datetime="${endJSONDate}">${endFormattedDate}</time>
           </p>
           <p class="event__duration">${duration}</p>
         </div>
