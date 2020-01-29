@@ -1,4 +1,5 @@
 import flatpickr from 'flatpickr';
+import moment from 'moment';
 import {formatDate, formatTime} from '../utils/common';
 import {groupToTypes, groupTypeToPreposition, typeToGroup} from '../const';
 import AbstractSmartComponent from './abstract-smart-component';
@@ -173,7 +174,9 @@ export default class EventEditComponent extends AbstractSmartComponent {
     this._deleteButtonClickHandler = null;
     this._rollupButtonClickHandler = null;
     this._cancelButtonClickHandler = null;
-    this._flatpickr = null;
+
+    this._startFlatpickr = null;
+    this._endFlatpickr = null;
 
     this._applyFlatpickr();
     this._subscribeOnEvents();
@@ -304,17 +307,22 @@ export default class EventEditComponent extends AbstractSmartComponent {
       START: `start`,
       END: `end`,
     };
-    if (this._flatpickr) {
-      this._flatpickr.destroy();
-      this._flatpickr = null;
+    const MOMENT_DATE_FORMAT = `DD/MM/YY HH:mm`;
+    if (this._startFlatpickr) {
+      this._startFlatpickr.destroy();
+      this._startFlatpickr = null;
     }
-    this._applyFlatpickrItem(DateType.START);
-    this._applyFlatpickrItem(DateType.END);
-  }
+    if (this._endFlatpickr) {
+      this._endFlatpickr.destroy();
+      this._endFlatpickr = null;
+    }
 
-  _applyFlatpickrItem(dateType) {
-    const startDateElement = this.getElement().querySelector(`#event-${dateType}-time-1`);
-    this._flatpickr = flatpickr(startDateElement, {
+    const startDateElement = this.getElement().querySelector(`#event-${DateType.START}-time-1`);
+    const endDateElement = this.getElement().querySelector(`#event-${DateType.END}-time-1`);
+    let startValue = startDateElement.value;
+    let endValue = endDateElement.value;
+
+    this._startFlatpickr = flatpickr(startDateElement, {
       altInput: true,
       allowInput: true,
       altFormat: FLATPICKR_DATE_FORMAT,
@@ -322,7 +330,32 @@ export default class EventEditComponent extends AbstractSmartComponent {
       enableTime: true,
       // eslint-disable-next-line camelcase
       time_24hr: true,
-      defaultDate: this._event.date[dateType] === null ? new Date() : this._event.date[dateType],
+      defaultDate: this._event.date[DateType.START] === null ? new Date() : this._event.date[DateType.START],
+      maxDate: moment(endValue, MOMENT_DATE_FORMAT).subtract(1, `minute`).format(MOMENT_DATE_FORMAT),
+      onChange(selectedDates, dateStr, instance) {
+        startValue = moment(instance.selectedDates[0]).add(1, `minute`).format(MOMENT_DATE_FORMAT);
+      },
+      onOpen(selectedDates, dateStr, instance) {
+        instance.config.maxDate = endValue;
+      },
+    });
+
+    this._endFlatpickr = flatpickr(endDateElement, {
+      altInput: true,
+      allowInput: true,
+      altFormat: FLATPICKR_DATE_FORMAT,
+      dateFormat: FLATPICKR_DATE_FORMAT,
+      enableTime: true,
+      // eslint-disable-next-line camelcase
+      time_24hr: true,
+      defaultDate: this._event.date[DateType.END] === null ? new Date() : this._event.date[DateType.END],
+      minDate: moment(startValue, MOMENT_DATE_FORMAT).add(1, `minute`).format(MOMENT_DATE_FORMAT),
+      onChange(selectedDates, dateStr, instance) {
+        endValue = moment(instance.selectedDates[0]).subtract(1, `minute`).format(MOMENT_DATE_FORMAT);
+      },
+      onOpen(selectedDates, dateStr, instance) {
+        instance.config.minDate = startValue;
+      },
     });
   }
 
