@@ -7,7 +7,10 @@ import AbstractSmartComponent from './abstract-smart-component';
 import {debounce} from '../utils/debounce';
 
 const DEBOUNCE_DELAY = 1000;
-const FLATPICKR_DATE_FORMAT = `d/m/y H:i`;
+const DateFormat = {
+  FLATPICKR: `d/m/y H:i`,
+  MOMENT: `DD/MM/YY HH:mm`,
+};
 const eventTypeTemplate = (type, checkedType) => {
   const isCheckedType = type === checkedType ? `checked` : ``;
   return (
@@ -48,8 +51,8 @@ const createOfferTemplate = (offer) => {
 };
 
 const createEditEventTemplate = (event, destinations, option) => {
-  const {date, price: notSanitizedPrice, isFavorite, isNewEvent} = event;
-  const {type, destination, offers, hasDestination} = option;
+  const {isNewEvent} = event;
+  const {type, destination, offers, hasDestination, price: notSanitizedPrice, date, isFavorite} = option;
 
   const price = he.encode(String(notSanitizedPrice));
   const startDate = date.start ? `${formatDate(date.start)} ${formatTime(date.start)}` : ``;
@@ -171,6 +174,9 @@ export default class EventEditComponent extends AbstractSmartComponent {
     this._destination = event.destination;
     this._offers = event.offers;
     this._hasDestination = !!event.destination.description && event.destination.photos.length > 0;
+    this._price = event.price;
+    this._startDate = event.date.start;
+    this._endDate = event.date.end;
 
     this._submitHandler = null;
     this._deleteButtonClickHandler = null;
@@ -204,6 +210,12 @@ export default class EventEditComponent extends AbstractSmartComponent {
       destination: this._destination,
       offers: this._offers,
       hasDestination: this._hasDestination,
+      price: this._price,
+      date: {
+        start: this._startDate,
+        end: this._endDate,
+      },
+      isFavorite: this._isFavorite,
     });
   }
 
@@ -216,6 +228,11 @@ export default class EventEditComponent extends AbstractSmartComponent {
   }
 
   rerender(onFocusElement = null) {
+    this._price = this.getElement()[`event-price`].value;
+    this._startDate = this.getElement()[`event-start-time`].value ?
+      moment(this.getElement()[`event-start-time`].value, DateFormat.MOMENT).format() : null;
+    this._endDate = this.getElement()[`event-end-time`].value ?
+      moment(this.getElement()[`event-end-time`].value, DateFormat.MOMENT).format() : null;
     super.rerender();
 
     this._applyFlatpickr();
@@ -314,7 +331,6 @@ export default class EventEditComponent extends AbstractSmartComponent {
       START: `start`,
       END: `end`,
     };
-    const MOMENT_DATE_FORMAT = `DD/MM/YY HH:mm`;
     if (this._startFlatpickr) {
       this._startFlatpickr.destroy();
       this._startFlatpickr = null;
@@ -330,15 +346,15 @@ export default class EventEditComponent extends AbstractSmartComponent {
     let endValue = endDateElement.value ? endDateElement.value : null;
 
     this._startFlatpickr = flatpickr(startDateElement, {
-      altInput: true,
-      allowInput: true,
-      altFormat: FLATPICKR_DATE_FORMAT,
-      dateFormat: FLATPICKR_DATE_FORMAT,
-      enableTime: true,
-      // eslint-disable-next-line camelcase
-      time_24hr: true,
+      'altInput': true,
+      'allowInput': true,
+      'altFormat': DateFormat.FLATPICKR,
+      'dateFormat': DateFormat.FLATPICKR,
+      'enableTime': true,
+      'time_24hr': true,
+      'defaultDate': startValue === null ? `` : startValue,
       onChange(selectedDates, dateStr, instance) {
-        startValue = moment(instance.selectedDates[0]).add(1, `minute`).format(MOMENT_DATE_FORMAT);
+        startValue = moment(instance.selectedDates[0]).add(1, `minute`).format(DateFormat.MOMENT);
       },
       onOpen(selectedDates, dateStr, instance) {
         if (endValue) {
@@ -348,15 +364,15 @@ export default class EventEditComponent extends AbstractSmartComponent {
     });
 
     this._endFlatpickr = flatpickr(endDateElement, {
-      altInput: true,
-      allowInput: true,
-      altFormat: FLATPICKR_DATE_FORMAT,
-      dateFormat: FLATPICKR_DATE_FORMAT,
-      enableTime: true,
-      // eslint-disable-next-line camelcase
-      time_24hr: true,
+      'altInput': true,
+      'allowInput': true,
+      'altFormat': DateFormat.FLATPICKR,
+      'dateFormat': DateFormat.FLATPICKR,
+      'enableTime': true,
+      'time_24hr': true,
+      'defaultDate': endValue === null ? `` : endValue,
       onChange(selectedDates, dateStr, instance) {
-        endValue = moment(instance.selectedDates[0]).subtract(1, `minute`).format(MOMENT_DATE_FORMAT);
+        endValue = moment(instance.selectedDates[0]).subtract(1, `minute`).format(DateFormat.MOMENT);
       },
       onOpen(selectedDates, dateStr, instance) {
         if (startValue) {

@@ -180,6 +180,8 @@ export default class TripController {
       } else {
         this._api.createPoint(newEventAdapterModel)
           .then((eventAdapterModel) => {
+            const typeToOffers = this._eventsModel.getTypeToOffers();
+            eventAdapterModel = EventAdapterModel.replenishOffers(typeToOffers.get(eventAdapterModel.type), eventAdapterModel);
             this._eventsModel.addEvent(eventAdapterModel);
             pointController.render(eventAdapterModel, Mode.DEFAULT, this._backEndStaticData);
 

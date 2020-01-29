@@ -27,6 +27,7 @@ export default class EventAdapterModel {
       };
     });
     this.isFavorite = endData[`is_favorite`];
+    this.isNewEvent = false;
   }
 
   getRAW() {

@@ -49,7 +49,7 @@ export default class PointController {
     });
 
     this._eventEditComponent.setFavoriteToggleHandler((isChange) => {
-      if (!isChange) {
+      if (!isChange || eventAdapterModel.isNewEvent) {
         return;
       }
       this._eventEditComponent.disableForm();
@@ -146,7 +146,7 @@ export default class PointController {
         }),
       },
       'base_price': formData.get(`event-price`),
-      'is_favorite': eventAdapterModel.isFavorite,
+      'is_favorite': !!formData.get(`event-favorite`),
       'offers': offers.filter((it) => it.isChecked).map((it) => {
         return {
           'title': it.title,
