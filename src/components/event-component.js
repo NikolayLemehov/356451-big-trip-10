@@ -1,3 +1,4 @@
+import he from 'he';
 import {formatTime, getDuration} from '../utils/common';
 import AbstractComponent from './abstract-component';
 import {groupTypeToPreposition, typeToGroup} from '../const';
@@ -17,7 +18,8 @@ const createOffersTemplate = (offers) => offers.filter((it) => it.isChecked).sli
   .join(``);
 
 const createEventTemplate = (event) => {
-  const {id, type, date, price, offers, destination} = event;
+  const {id, type, date, price: notSanitizedPrice, offers, destination} = event;
+  const price = he.encode(notSanitizedPrice);
   const duration = getDuration(date.start, date.end);
   const preposition = groupTypeToPreposition.get(typeToGroup.get(type));
 
