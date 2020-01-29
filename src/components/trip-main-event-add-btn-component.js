@@ -10,4 +10,12 @@ export default class TripMainEventAddBtnComponent extends AbstractComponent {
   setAddButtonClickHandler(handler) {
     this.getElement().addEventListener(`click`, handler);
   }
+
+  disableBtn() {
+    this.getElement().disabled = `disabled`;
+  }
+
+  activeBtn() {
+    this.getElement().disabled = ``;
+  }
 }

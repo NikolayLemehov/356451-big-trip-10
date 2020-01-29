@@ -28,6 +28,7 @@ export default class TripController {
     };
     this._tripInfoMainComponent = null;
     this._tripInfoCostComponent = null;
+    this._tripMainEventAddBtnComponent = null;
 
     this._tripSortComponent = new TripSortComponent(this._eventsModel.getSorts());
     this._tripDaysComponent = new TripDaysComponent();
@@ -63,7 +64,8 @@ export default class TripController {
     this._renderEvents();
   }
 
-  createEvent() {
+  createEvent(tripMainEventAddBtnComponent) {
+    this._tripMainEventAddBtnComponent = tripMainEventAddBtnComponent;
     if (this._creatingEventController) {
       return;
     }
@@ -172,6 +174,7 @@ export default class TripController {
   _onDataChange(pointController, oldEvent, newEventAdapterModel, isDoUpdateEvents = true) {
     if (oldEvent === EmptyEvent) {
       this._creatingEventController = null;
+      this._tripMainEventAddBtnComponent.activeBtn();
       if (newEventAdapterModel === null) {
         pointController.destroy();
       } else {
@@ -220,6 +223,7 @@ export default class TripController {
   }
 
   _onViewChange() {
+    this._tripMainEventAddBtnComponent.activeBtn();
     if (this._creatingEventController) {
       this._creatingEventController.destroy();
       this._creatingEventController = null;
