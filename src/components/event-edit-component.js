@@ -1,3 +1,4 @@
+import he from 'he';
 import flatpickr from 'flatpickr';
 import moment from 'moment';
 import {formatDate, formatTime} from '../utils/common';
@@ -47,9 +48,10 @@ const createOfferTemplate = (offer) => {
 };
 
 const createEditEventTemplate = (event, destinations, option) => {
-  const {date, price, isFavorite, isNewEvent} = event;
+  const {date, price: notSanitizedPrice, isFavorite, isNewEvent} = event;
   const {type, destination, offers, hasDestination} = option;
 
+  const price = he.encode(String(notSanitizedPrice));
   const startDate = `${formatDate(date.start)} ${formatTime(date.start)}`;
   const endDate = `${formatDate(date.end)} ${formatTime(date.end)}`;
   const preposition = groupTypeToPreposition.get(typeToGroup.get(type));
@@ -59,7 +61,7 @@ const createEditEventTemplate = (event, destinations, option) => {
 
   const photoElementsTemplate = destination.photos
     .map((it) => `<img class="event__photo" src="${it.src}" alt="${it.description}">`).join(``);
-  const cityOptionsTemplate = destinations.map((it) => `<option value="${it.city}"></option>`).join(``);
+  const cityOptionsTemplate = destinations.map((it) => `<option value="${he.encode(it.city)}"></option>`).join(``);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -82,7 +84,7 @@ const createEditEventTemplate = (event, destinations, option) => {
             ${type === `trip` ? `` : `${type} ${preposition}`}
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination"
-            value="${destination.city}" list="destination-list-1">
+            value="${he.encode(destination.city)}" list="destination-list-1">
           <datalist id="destination-list-1">
             ${cityOptionsTemplate}
           </datalist>
@@ -143,7 +145,7 @@ const createEditEventTemplate = (event, destinations, option) => {
 
         ${hasDestination ? `<section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${destination.description}</p>
+          <p class="event__destination-description">${he.encode(destination.description)}</p>
 
           <div class="event__photos-container">
             <div class="event__photos-tape">
