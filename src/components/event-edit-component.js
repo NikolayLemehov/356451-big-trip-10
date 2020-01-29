@@ -1,4 +1,3 @@
-import he from 'he';
 import flatpickr from 'flatpickr';
 import moment from 'moment';
 import {formatDate, formatTime} from '../utils/common';
@@ -48,10 +47,9 @@ const createOfferTemplate = (offer) => {
 };
 
 const createEditEventTemplate = (event, destinations, option) => {
-  const {date, price: notSanitizedPrice, isFavorite, isNewEvent} = event;
+  const {date, price, isFavorite, isNewEvent} = event;
   const {type, destination, offers, hasDestination} = option;
 
-  const price = he.encode(notSanitizedPrice);
   const startDate = `${formatDate(date.start)} ${formatTime(date.start)}`;
   const endDate = `${formatDate(date.end)} ${formatTime(date.end)}`;
   const preposition = groupTypeToPreposition.get(typeToGroup.get(type));
