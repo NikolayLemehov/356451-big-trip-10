@@ -380,7 +380,7 @@ export default class EventEditComponent extends AbstractSmartComponent {
     });
 
     element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
-      const destination = this._destinations.find((it) => it.city === evt.target.value);
+      const destination = this._destinations.find((it) => it.city === evt.target.value && it.description && it.photos.length > 0);
       if (destination) {
         this._hasDestination = true;
         this._destination = destination;
