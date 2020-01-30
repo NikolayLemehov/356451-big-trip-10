@@ -18,17 +18,29 @@ const getPeriod = (events) => {
   }
 };
 
-const createTripInfoTemplate = (events) => {
+const getCitiesText = (events) => {
   const cities = events.map((event) => event.destination.city).map((city, i, arr) => city === arr[i + 1] ? `` : city).filter(Boolean);
   const startCity = cities[0];
   const endCity = cities[cities.length - 1];
   const middleCity = cities.length > 3 ? `...` : cities[1];
+  switch (cities.length) {
+    case 1:
+      return `${startCity}`;
+    case 2:
+      return `${startCity} &mdash; ${endCity}`;
+    default:
+      return `${startCity} &mdash; ${middleCity} &mdash; ${endCity}`;
+  }
+};
+
+const createTripInfoTemplate = (events) => {
+  const citiesText = getCitiesText(events);
   const date = getPeriod(events);
 
   return (
     `<div class="trip-info__main">
-      <h1 class="trip-info__title">${startCity} &mdash; ${middleCity} &mdash; ${endCity}</h1>
-      <p class="trip-info__dates">${date.start}&nbsp;&mdash;&nbsp;${date.end}</p>
+      <h1 class="trip-info__title">${citiesText}</h1>
+      <p class="trip-info__dates">${date.start} &mdash; ${date.end}</p>
     </div>`
   );
 };

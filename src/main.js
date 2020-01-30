@@ -17,7 +17,7 @@ import 'flatpickr/dist/flatpickr.css';
 const STORE_PREFIX = `big-trip-localstorage`;
 const STORE_VER = `v1`;
 const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
-const AUTHORIZATION = `Basic 6PZAz5uh8iB4RIAL336X`;
+const AUTHORIZATION = `Basic 6PZAz5uh8iB4RIAL336Xr`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/big-trip`;
 
 window.addEventListener(`load`, () => {
