@@ -82,14 +82,28 @@ const getTypeToEventHour = (events) => {
   });
   return typeToEventCount;
 };
+const getTypeToTotalCost = (events) => {
+  const ctxType = new Set();
+  const typeToTotalCost = new Map();
+  events.forEach((it) => {
+    if (!ctxType.has(it.type)) {
+      ctxType.add(it.type);
+      typeToTotalCost.set(it.type, it.price);
+    } else {
+      typeToTotalCost.set(it.type, typeToTotalCost.get(it.type) + it.price);
+    }
+  });
+  return typeToTotalCost;
+};
 const getSortKeys = (map) => Array.from(map.keys()).sort((a, b) => map.get(b) - map.get(a));
 
 const renderMoneyChart = (moneyCtx, events) => {
-  const sortMoneyEvents = events.slice().sort((a, b) => b.price - a.price);
+  const typeToTotalCost = getTypeToTotalCost(events);
+  const sortTypes = getSortKeys(typeToTotalCost);
 
   const chartConfig = DefaultChartConfig.get();
-  chartConfig.data.labels = sortMoneyEvents.map((it) => it.type);
-  chartConfig.data.datasets[0].data = sortMoneyEvents.map((it) => it.price);
+  chartConfig.data.labels = sortTypes;
+  chartConfig.data.datasets[0].data = sortTypes.map((it) => typeToTotalCost.get(it));
   chartConfig.options.title.text = Statistic.MONEY.toUpperCase();
   chartConfig.options.plugins.datalabels.formatter = (value) => `${EURO_SYMBOL} ${value}`;
 
