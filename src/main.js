@@ -19,6 +19,7 @@ const STORE_VER = `v1`;
 const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 const AUTHORIZATION = `Basic 6PZAz5uh8iB4RIAL336Xr`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/big-trip`;
+let typeToOffers = new Map();
 
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`)
@@ -80,6 +81,7 @@ siteMenuComponent.setChangeHandler((menuName) => {
       statisticsComponent.show();
   }
 });
+
 Promise.all([
   apiWithProvider.getOffers().then((offerAdapterModel) => offerAdapterModel),
   apiWithProvider.getDestinations().then((destinationAdapterModel) => destinationAdapterModel),
@@ -87,8 +89,9 @@ Promise.all([
 ]).then(([offerAdapterModel, destinationAdapterModel, eventAdapterModels]) => {
   eventsModel.setDestinations(destinationAdapterModel.destinations);
   eventsModel.setTypeToOffers(offerAdapterModel.typeToOffers);
+  typeToOffers = offerAdapterModel.typeToOffers;
   eventAdapterModels.forEach((it) => {
-    EventAdapterModel.replenishOffers(offerAdapterModel.typeToOffers.get(it.type), it);
+    EventAdapterModel.replenishOffers(typeToOffers.get(it.type), it);
   });
   eventsModel.setEvents(eventAdapterModels);
 
@@ -100,7 +103,14 @@ window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);
   if (!apiWithProvider.getSynchronize()) {
     apiWithProvider.sync()
-      .then(() => {
+      .then((syncedEndEvents) => {
+        const eventAdapterModels = syncedEndEvents.map((it) => {
+          it = EventAdapterModel.parseEvent(it);
+          return EventAdapterModel.replenishOffers(typeToOffers.get(it.type), it);
+        });
+        eventsModel.setEvents(eventAdapterModels);
+
+        tripController._updateEvents();
       })
       .catch(() => {
       });

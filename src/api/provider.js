@@ -111,19 +111,20 @@ export default class Provider {
       return this._api.sync(storeEvents)
         .then((response) => {
           storeEvents.filter((event) => event.offline).forEach((event) => {
-            this._store.removeItem(event.id);
+            this._store.removeEvent(event.id);
           });
 
-          const createdEvents = this._getSyncedTasks(response.created);
+          const createdEvents = response.created;
           const updatedEvents = this._getSyncedTasks(response.updated);
 
-          [...createdEvents, ...updatedEvents].forEach((event) => {
-            this._store.setItem(event.id, event);
+          const syncedEvents = [...updatedEvents, ...createdEvents];
+          [...updatedEvents, ...createdEvents].forEach((event) => {
+            this._store.setEvent(event.id, event);
           });
 
           this._isSynchronized = true;
 
-          return Promise.resolve();
+          return Promise.resolve(syncedEvents);
         });
     }
 
@@ -139,6 +140,6 @@ export default class Provider {
   }
 
   _getSyncedTasks(items) {
-    items.filter(({success}) => success).map(({payload}) => payload.point);
+    return items.filter((it) => it.success).map((it) => it.payload.point);
   }
 }
